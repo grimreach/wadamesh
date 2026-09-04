@@ -24588,8 +24588,13 @@ static void makeHome(lv_obj_t* tab) {
   lv_obj_set_ext_click_area(s_home_chart_legend, 8);
   lv_obj_add_event_cb(s_home_chart_legend, homeChartClickedCb, LV_EVENT_CLICKED, nullptr);
 
-#if defined(HAS_TDECK_GT911) || defined(HAS_TANMATSU) || defined(TLORA_PAGER) || defined(HAS_RAK_TAP_V2) || defined(HAS_THINKNODE_M9) || defined(ATTAKY_MESH_SERIES)
+#if defined(HAS_TDECK_GT911) || defined(HAS_TANMATSU) || defined(TLORA_PAGER) || defined(HAS_RAK_TAP_V2) || defined(HAS_THINKNODE_M9) || defined(ATTAKY_MESH_SERIES) || defined(WADA_BBDECK)
   // Landscape boards keep the chart clear of the right-hand button strip.
+  // NOTE: the home UPDATE path (homeTick) computes this the same way but
+  // WITHOUT a board gate, so a landscape board missing from this list builds a
+  // full-width chart that the Advert/Terminal/Apps/Control column then draws
+  // over. Seen on the BB-Deck: the "Sig --" card and its divider ran under the
+  // buttons. Any new landscape board belongs in this list.
   const int chart_w = home_land ? (cw - RSTRIP) : cw;
 #else
   const int chart_w = cw;
