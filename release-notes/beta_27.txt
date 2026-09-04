@@ -1,0 +1,15 @@
+# beta_27 (STABLE — rolls up the beta_26 + beta_27 test builds on top of the previous stable, beta_25.
+# One user-facing note per non-blank, non-# line; # lines are section comments.)
+
+# --- Fixed ---
+Fixed a reboot loop that could hit while the device saved its contact list. Internal-flash housekeeping during a save could freeze the device long enough to trip the watchdog and restart it; that save no longer trips it. Thanks to the crash report that pinned it down.
+Devices installed under the Launcher no longer show the on-device "Install update" button. That update path only works on a standalone flash; under the Launcher it failed with "won't fit: Bad Size Given". The "update available" note stays, but you update through the Launcher instead. Thanks to Keith (KM1USR) for the report.
+
+# --- New ---
+Keyboard backlight brightness control on the T-Deck: a live slider plus Off / 25 / 50 / 75 / Max presets in Settings > Keyboard. It dims smoothly (fine-grained at the low end), applies to the on and auto modes and the new-message flash, and survives a reboot. Thanks to Yazutsu (PR #85).
+
+# --- Improved ---
+On devices with a microSD card, contacts and channels are now kept on the card (like chat history and map tiles already are). Your existing contacts move over automatically on first boot; your identity and settings stay in internal flash, so the node is unchanged. Keep the card inserted afterwards - the contact list lives on it, and an older firmware won't look there if you ever downgrade.
+
+# --- Also ---
+This is the new stable build, promoted from the beta_27 test channel. It includes everything from the beta_26 and beta_27 test builds.

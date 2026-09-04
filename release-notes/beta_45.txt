@@ -1,0 +1,29 @@
+# beta_45 (STABLE) — everything since the last stable (beta_40): browser-based remote control, an on-device web browser, three new boards, and a batch of fixes.
+# One user-facing note per non-blank, non-# line; # lines are section comments.
+
+# --- New: control wadamesh from a browser (over Wi-Fi — no app, account or cloud) ---
+New web control panel: run the device from a phone or laptop browser over Wi-Fi, with full Chats, Contacts, Discovered, Terminal and Settings tabs — served by the device itself. Turn on the VNC app, then open http://<device-ip>:8765/ from any browser on the same network.
+VNC app: mirrors the live device screen into the browser and lets you drive it — taps and typing in the browser control the device, and anything that changes on the device shows up in the browser.
+REMOTE app: a headless mode that renders the whole UI at a larger, browser-friendly resolution over Wi-Fi while the device screen shows the address to open; a Rotate button flips between desktop (landscape) and phone (portrait) layouts.
+Web Contacts: search, sort and filter contacts, see each one's distance, coordinates and last-heard age, and get the same per-contact actions as on the device (favourite, block, reset path, remove). Discovered nodes appear too, each with a one-tap "Add".
+Web Chats: pop-up notifications (with an optional beep) when a message arrives, the open chat auto-refreshes as replies land, and acknowledgements + repeats-heard show for messages you send from the browser.
+
+# --- New: on-device web browser + links in chat ---
+New "Web" app (8 MB boards — T-Deck, Tanmatsu): open a URL and read the page as plain readable text — no proxy, tracking, JavaScript or images — with tappable links and back/forward/refresh.
+Links in a chat are now tappable: "Open in web" loads the page in the on-device browser, and "Create QR" shows a scannable QR to open the link on your phone (works on every board, including the Heltec V4).
+
+# --- New boards ---
+LilyGo T-LoRa Pager (ESP32-S3): a QWERTY-keyboard handheld with a rotary encoder and no touchscreen, fully driven from the keyboard + encoder; both radio variants (LR1121 and SX1262) supported. Contributed by @codemonkeybr (PR #149) — thank you!
+LilyGo T-Display P4 (ESP32-P4): an AMOLED touchscreen handheld. Early port ("partially supported") — LoRa mesh, chat, map, GPS and the phone-app companion over Wi-Fi/USB work; Bluetooth pairing isn't available on this board (stock radio-coprocessor limitation — pair over Wi-Fi or USB).
+Heltec WiFi LoRa 32 V4-R8 (8 MB PSRAM) with Expansion Kit V2 (microSD): "partially supported" while hardware testing finishes.
+
+# --- Fixed ---
+Heltec V4: map tiles now fill the whole map instead of only the top — the 2 MB-PSRAM V4 was running out of contiguous memory for the tile grid, so tiles now reuse a small fixed pool and only load what's on screen.
+Heltec V4-R8: fixed random hard-freezes that needed a reset (the touch controller was wedging the shared I2C bus).
+Tanmatsu and other keyboard-only boards: you can now select and edit the Wi-Fi name and password fields in Wi-Fi settings.
+T-Display P4: the clock sets itself over Wi-Fi even where NTP is blocked, and won't get stuck on a bad date from the hardware clock.
+French (AZERTY) on-screen keyboard: the spacebar is back in the normal letter view.
+REMOTE mode now works on the Heltec V4 TFT (and other 2 MB-PSRAM boards); keyboard-less boards can leave REMOTE by holding the screen ~3 s, and the web page has an "Exit remote" button.
+
+# --- Also ---
+The flasher site shows a support badge on every board (fully vs partially supported); hover it to see what works.

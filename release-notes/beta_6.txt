@@ -1,0 +1,34 @@
+# beta_6 — what's new (one user-facing note per non-blank, non-# line)
+
+# --- New: RF Monitor app ---
+New Monitor app on the app drawer: a live RF sniffer for your node — see exactly what it is pulling out of the air in real time
+A "Recently heard" feed lists recent received frames by type (text, advert, ack, route-trace…) with RSSI, SNR and hop count, colour-coded by type
+A link-margin readout grades how much headroom your last packet had (green / amber / red), alongside a live packet rate and a noise-floor + peak-hold RSSI scope with an on-screen dBm scale
+The Monitor lays out cleanly in both portrait and landscape, so it is readable on the Heltec V4 and the T-Deck
+
+# --- Chat & contacts ---
+Direct-message chats now show a person icon and channels a group icon, instead of the old loop / envelope
+You can block a non-contact sender by name — handy for silencing an automated room or repeater bot you could not block before
+Opening a chat or channel no longer jumps you to the newest message; it keeps your scroll position
+The contacts Sort & Filter popup now closes after you pick a sort option
+The chat/channel long-press popup is fixed: the close X no longer overlaps the buttons while you scroll it
+
+# --- Time & timezone ---
+New time-zone picker with named zones (no longer CET-only) — set yours in Settings → System
+Fixed the clock getting stuck at 1902 and channels showing 1969–1970 dates: GPS no longer clobbers the clock with an invalid date, and the time now survives a reboot
+
+# --- Launcher & Wi-Fi ---
+Map tiles now download when running under Launcher (the tile cache was wrongly being reported as full)
+GPS now acquires a fix when running under Launcher
+The setup-wizard Wi-Fi scan no longer comes up empty ("no networks found") — Wi-Fi modem sleep is deferred until after you are connected
+
+# --- Bluetooth ---
+Bluetooth now advertises under your node / profile name instead of "NimBLE"
+The Bluetooth PIN no longer resets on its own — it is saved and reused across reboots
+
+# --- Power & performance ---
+Turning the screen off now downclocks the CPU and enables Wi-Fi modem sleep to save power
+On the map, your position dot is drawn before the tiles so it no longer lags behind when you pan
+
+# --- Community ---
+Merged map-server and SD-tile rendering fixes contributed by Vybo (PR #11)

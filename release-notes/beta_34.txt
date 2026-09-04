@@ -1,0 +1,11 @@
+# beta_34 (TEST) - buffered receive: the missed-messages fix, ON by default on this test build. On top of beta_33.
+# One user-facing note per non-blank, non-# line; # lines are section comments.
+
+# --- New ---
+This build changes how the device collects packets from the LoRa radio, and the new way is ON by default so the test channel can prove it. Background: the radio chip holds only one received packet at a time, and until now the firmware only collected it when the main loop got around to it, the same loop that draws the screen. If the interface kept the loop busy while two packets arrived back to back, the first one was silently overwritten. That is the "my device missed a message another device right next to it heard" problem some of you reported, and why it affected this firmware but not stock MeshCore, which has no screen to draw. A small dedicated background task now collects every packet within about a millisecond of it arriving, no matter what the interface is doing.
+Because the receive path is the heart of the device, this ships with a safety hatch: if you see anything odd with receiving, sending, or the Spectrum analyzer, turn off "Buffered receive (experimental)" in Settings > Radio & Mesh (applies instantly, no reboot) and you are back on the old path. Please report it either way, that is exactly what the test channel is for.
+The About page now shows LoRa receive counters (heard / read / late-lost). "late-lost" counts packets the radio heard but the firmware failed to collect in time. With buffered receive on it should stay at zero. If you turn the toggle off on a busy mesh you may watch it creep up, which is the old bug happening live.
+
+# --- Fixed ---
+Messages sent by wadamesh no longer carry a few stray bytes at the end that stock MeshCore devices and some companion apps displayed as garbage characters after the text (issue #13).
+A GPS module reporting a bogus date can no longer drag the device clock back to the year 1902 (core clock guard).

@@ -1,0 +1,7 @@
+# beta_33 (TEST) — the MQTT freeze fix + the About page no longer stalls itself. On top of beta_32.
+# One user-facing note per non-blank, non-# line; # lines are section comments.
+
+# --- Fixed ---
+The freezes with MQTT enabled are gone. Connecting to the broker (DNS lookup, TCP connect, login) could block the device for 2-10 seconds and retried every 15 seconds while the broker was unreachable, all on the UI thread. Connection attempts now run fully in the background, and writes to a broker that stops responding are skipped instead of waited on (the same treatment beta_32 gave phone/web connections). Tip: if your bridge keeps reconnecting, check the broker address and credentials - a healthy connection does not retry.
+The About page caused a ~0.4 second hitch every second while it was open: computing the firmware image size checksums the whole ~3 MB app in flash and ran twice per refresh. It is now computed once per boot, so About (and its stall list) no longer disturbs the very measurements it shows.
+Favoriting a contact when the favorites list is full (16) now says "Favorites full (max 16)" instead of the incorrect "Removed from favorites".

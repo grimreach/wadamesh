@@ -1,0 +1,6 @@
+"Heard repeats" indicator works again on networks with a region set
+Fixed a reboot when opening Trace route on one of your sent messages
+Fixed garbled "recently heard" / contacts from malformed adverts
+Lighter settings storage — helps avoid the shared-NVS "storage full" issue
+Clock no longer stuck near 1970 after a reboot until Wi-Fi/GPS syncs
+Setup wizard and About now show the WADAMESH name

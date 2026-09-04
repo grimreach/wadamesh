@@ -1,0 +1,16 @@
+# beta_16 (one user-facing note per non-blank, non-# line; # lines are section comments)
+
+# --- New ---
+Heltec V4 Expansion Kit support: a dedicated Sensors tab (temperature, humidity, pressure, GPS and battery, with small history charts), a Home-screen environment readout, and an on-device "mesh console" for poking at the radio. It only turns up when a sensor board is actually attached, so a bare V4 looks exactly as it did before. This one was a real grind to land — it came in as a huge pull request built on an old beta, and getting it in cleanly meant re-doing most of it by hand against the current code and carefully fencing it all off so it can't bloat or disturb the T-Deck and Tanmatsu builds. Thanks to Samuel Coustet for the original work (#29).
+French, Dutch, German, Spanish and Italian keyboards, on-screen and on the T-Deck's physical keys. Choosing one of those as your interface language now auto-selects the matching layout. Also from Samuel Coustet (#29).
+Wi-Fi firmware updates are back: on a normally-flashed device (not the Launcher) you can update straight from Settings -> About, no cable needed.
+You can also roll back now — "Install a previous version" lets you reinstall one of the last few releases over Wi-Fi, with a confirmation first since it's a downgrade.
+
+# --- Fixed ---
+The status-bar clock no longer overlaps the node name on the V4 (it had been crammed against it for a good while).
+Closing a dialog no longer lets a scroll carry through to the page behind it (thanks tun0, #50).
+The contact action sheet no longer overflows the screen in landscape (thanks tun0, #49).
+The per-channel region field now shows your default region as the hint, instead of a generic placeholder (thanks tun0, #48).
+
+# --- Also ---
+Everything from beta_15 is included.

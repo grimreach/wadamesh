@@ -1,0 +1,8 @@
+# beta_22 (TEST build — one user-facing note per non-blank, non-# line; # lines are section comments)
+
+# --- Fixed ---
+The signal probe reads a real signal again. In beta_21 the probe was changed to a zero-hop advert so it could never be re-flooded across the mesh — but nothing answers a zero-hop advert, so the signal reading stopped updating. It now sends a directed trace "ping" to your nearest repeater instead: the repeater replies directly (it still never floods the mesh) and the device reads the link signal from that reply. So you get both — no mesh flooding, and a live signal again. Thanks to Tarmo for spotting this and suggesting the fix.
+Contacts discovered while your phone is connected now show on the device too. If the T-Deck was connected to the MeshCore phone app over Bluetooth and heard a new node, the node appeared on the phone but not on the device's own screen, and the Contacts list did not refresh. The device now updates its own Contacts list and notification whether or not a phone app is connected. (Issue #73, reported by 1nerdherder.)
+
+# --- Also ---
+This is a test-channel build (opt in with "Get test builds" on the About screen). Everything from beta_21, the first stable, is included.

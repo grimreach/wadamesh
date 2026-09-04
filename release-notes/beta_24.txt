@@ -1,0 +1,7 @@
+# beta_24 (TEST build — one user-facing note per non-blank, non-# line; # lines are section comments)
+
+# --- Fixed ---
+The signal probe now reads a real signal to your nearest repeater. It sends the standard mesh node-discovery request that repeaters actually answer, instead of the trace packet from the last test build that they ignored, so the signal reading updates again. This is the same request the Ultra and KiekR apps use. Thanks to Tarmo for decoding the exact packet.
+
+# --- Also ---
+This is a test-channel build (opt in with "Get test builds" on the About screen). Everything from the stable beta_21 and the earlier test builds is included.

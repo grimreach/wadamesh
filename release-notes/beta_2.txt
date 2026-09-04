@@ -1,0 +1,4 @@
+New WADAMESH boot logo + teal default theme
+Wi-Fi scan no longer crashes when no network is connected
+Wi-Fi settings apply live — no more reboot prompt
+Factory reset now fully wipes the device (SD-storage fix)

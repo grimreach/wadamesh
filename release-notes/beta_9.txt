@@ -1,0 +1,26 @@
+# beta_9 — what's new (one user-facing note per non-blank, non-# line)
+
+# --- Stability ---
+Wi-Fi now reconnects on its own after the link drops — no more rebooting just to get back online
+Fixed a bug where a corrupted chat-history file could make the device reboot on every received message (and hide your messages) — the bad file is now detected and reset automatically so it recovers on its own
+Hardened the boot path so a device with quirky memory degrades gracefully instead of getting stuck on the boot logo
+
+# --- Crash reports ---
+After a crash, Settings -> About now shows an "Export crash report" button that saves the crash dump to the microSD card, so you can send it to the devs and get the bug fixed
+
+# --- Map ---
+The reload button for corrupt tiles now actually clears the cached tiles — including when you're offline — and missing/blank "twilight zone" tiles re-download on their own
+Fixed tiles not re-fetching at zoom levels 13 to 15
+
+# --- Contacts ---
+Favourited contacts now always appear in the contact list, even with hundreds of similarly-named contacts (they used to stay hidden until you searched for them)
+
+# --- Chat ---
+Room-server messages now show the time each message was actually sent, instead of when it arrived
+Room-server messages now show who sent them
+Sharing your contact QR code now produces a valid code that the MeshCore phone app can scan and import
+Unread counts now show "99+" instead of an alarming raw number on busy channels
+
+# --- App drawer ---
+New icon-size setting: tap the cog at the top-right of the app drawer to switch between Compact and Large — bigger icons and labels, easier to read
+Smoother scrolling through the app list (and the other scrollable lists)

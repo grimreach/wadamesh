@@ -1,0 +1,13 @@
+<svg viewBox="0 0 720 140" xmlns="http://www.w3.org/2000/svg" fill="none" role="img" aria-label="WADAMESH">
+  <!-- Static lockup for README (dark bg): ink swapped to off-white, teal kept. -->
+  <g transform="translate(0 10)">
+    <path d="M10 60 L50 108 L90 60 L130 108 L170 60" stroke="#E8EAED" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M10 60 L50 12 L90 60 L130 12 L170 60" stroke="#E8EAED" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+    <g fill="#19D6C2">
+      <circle cx="10" cy="60" r="7.5"/><circle cx="90" cy="60" r="7.5"/><circle cx="170" cy="60" r="7.5"/>
+      <circle cx="50" cy="12" r="7.5"/><circle cx="130" cy="12" r="7.5"/>
+      <circle cx="50" cy="108" r="7.5"/><circle cx="130" cy="108" r="7.5"/>
+    </g>
+  </g>
+  <text x="225" y="92" font-family="'JetBrains Mono','Courier New',monospace" font-weight="700" font-size="62" letter-spacing="6" fill="#E8EAED">WADA<tspan fill="#19D6C2">MESH</tspan></text>
+</svg>

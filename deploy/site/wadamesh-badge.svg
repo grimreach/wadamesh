@@ -1,0 +1,12 @@
+<svg viewBox="0 0 160 160" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="WADAMESH">
+  <path d="M80 8 L138 41 L138 119 L80 152 L22 119 L22 41 Z" stroke="#15181E" stroke-width="7" stroke-linejoin="round"/>
+  <g transform="translate(80 80) scale(0.6) translate(-90 -60)">
+    <path d="M10 60 L50 108 L90 60 L130 108 L170 60" stroke="#15181E" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M10 60 L50 12 L90 60 L130 12 L170 60" stroke="#15181E" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/>
+    <g fill="#15B6A6">
+      <circle cx="10" cy="60" r="8"/><circle cx="90" cy="60" r="8"/><circle cx="170" cy="60" r="8"/>
+      <circle cx="50" cy="12" r="8"/><circle cx="130" cy="12" r="8"/>
+      <circle cx="50" cy="108" r="8"/><circle cx="130" cy="108" r="8"/>
+    </g>
+  </g>
+</svg>

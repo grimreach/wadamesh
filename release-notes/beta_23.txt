@@ -1,0 +1,11 @@
+# beta_23 (TEST build — one user-facing note per non-blank, non-# line; # lines are section comments)
+
+# --- Fixed ---
+Bluetooth companion reliability, especially messages and repeater admin. When a phone or Mac was connected over Bluetooth, the device was sending it a log entry for every LoRa packet it heard — on a busy mesh that swamped the Bluetooth link and starved the frames that actually matter. The device no longer sends that packet log over Bluetooth (USB and Wi-Fi companions still get it), so incoming messages reach the app and repeater / room-server admin (Manage Regions, saving parameters) stops timing out and dropping the connection. (Issues #46 and #54.)
+
+# --- Also in this test line (carried from beta_22) ---
+The signal probe reads a real signal again: it sends a directed trace "ping" to your nearest repeater, which replies, instead of a zero-hop advert that nothing answers. Thanks to Tarmo for spotting it.
+Contacts discovered while your phone is connected now also show on the device's own screen, not just in the phone app. (Issue #73.)
+
+# --- Also ---
+This is a test-channel build (opt in with "Get test builds" on the About screen). Everything from the stable beta_21 is included.

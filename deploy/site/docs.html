@@ -1,0 +1,694 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>WADAMESH — Documentation</title>
+<meta name="description" content="User guide for the WADAMESH touch firmware on the LilyGo T-Deck: home, chat, contacts, map, settings and the built-in apps. Real device screenshots.">
+<link rel="icon" href="wadamesh-badge.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#ffffff; --bg2:#f4f6f2; --ink:#15181e; --mut:#5d6770;
+    --line:#e5e8e2; --teal:#15b6a6; --teal-ink:#0e8d80;
+    color-scheme:light;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Inter,sans-serif; background:var(--bg); color:var(--ink); -webkit-font-smoothing:antialiased}
+  a{color:var(--teal-ink); text-decoration:none}
+
+  .top{position:sticky; top:0; z-index:30; display:flex; align-items:center; gap:14px; padding:12px 22px;
+    background:rgba(255,255,255,.88); backdrop-filter:saturate(1.2) blur(8px); border-bottom:1px solid var(--line)}
+  .top .word{font-weight:700; letter-spacing:2px; font-size:1.05rem; color:var(--ink)}
+  .top .word .t{color:var(--teal)}
+  .top .tag{font-family:'JetBrains Mono',monospace; font-size:.66rem; letter-spacing:.18em; text-transform:uppercase; color:var(--mut); border:1px solid var(--line); border-radius:100px; padding:4px 9px}
+  .top .sp{flex:1}
+  .top .home{display:inline-flex; align-items:center; gap:7px; color:var(--mut); font-size:.86rem; border:1px solid var(--line); border-radius:100px; padding:6px 13px; background:#fff; transition:background .15s,color .15s,border-color .15s}
+  .top .home:hover{color:var(--teal-ink); background:var(--bg2); border-color:#bfe6e0}
+  .top .home svg{width:16px;height:16px}
+
+  .shell{max-width:1200px; margin:0 auto; display:grid; grid-template-columns:220px 1fr; gap:34px; padding:0 22px}
+  nav.toc{position:sticky; top:64px; align-self:start; height:calc(100vh - 64px); overflow:auto; padding:26px 0 40px}
+  nav.toc .grp{font-family:'JetBrains Mono',monospace; font-size:.68rem; letter-spacing:.13em; text-transform:uppercase; color:var(--mut); margin:20px 0 7px}
+  nav.toc .grp:first-child{margin-top:0}
+  nav.toc a{display:block; padding:6px 12px; border-radius:9px; color:#46525c; font-size:.92rem; border-left:2px solid transparent}
+  nav.toc a:hover{background:var(--bg2); color:var(--ink)}
+  nav.toc a.on{color:var(--teal-ink); background:rgba(21,182,166,.09); border-left-color:var(--teal); font-weight:600}
+
+  main{padding:30px 0 90px; min-width:0}
+  .hero h1{font-size:clamp(1.9rem,4.4vw,2.6rem); letter-spacing:-.5px; font-weight:750}
+  .hero p{color:var(--mut); max-width:64ch; margin-top:10px; font-size:1.05rem}
+  .hero .meta{display:flex; gap:8px; flex-wrap:wrap; margin-top:16px}
+  .chip{display:inline-flex; align-items:center; gap:6px; font-size:.8rem; color:#3a444d; border:1px solid var(--line); border-radius:100px; padding:5px 11px; background:#fff}
+  .chip svg{width:14px;height:14px;color:var(--teal)}
+
+  section.doc{padding:36px 0; border-top:1px solid var(--line); scroll-margin-top:74px}
+  .doc h2{font-size:1.5rem; font-weight:730; letter-spacing:-.3px; display:flex; align-items:center; gap:10px}
+  .doc h2 .ico{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;flex:none; background:rgba(21,182,166,.12);color:var(--teal)}
+  .doc h2 .ico svg{width:18px;height:18px}
+  .row{display:grid; grid-template-columns:minmax(0,1fr) 372px; gap:34px; align-items:start; margin-top:16px}
+  @media(max-width:980px){.row{grid-template-columns:1fr}}
+  .prose{color:#3c454d; min-width:0}
+  .prose p{margin:0 0 12px}
+  .prose h3{font-size:1.02rem; margin:18px 0 6px; color:var(--ink)}
+  .prose ul{margin:4px 0 12px; padding-left:18px}
+  .prose li{margin:4px 0}
+  .prose b{color:var(--ink)}
+  .prose code{font-family:'JetBrains Mono',monospace; font-size:.85em; background:var(--bg2); border:1px solid var(--line); border-radius:6px; padding:1px 6px}
+  /* Code blocks and callouts, matching sdk.html so the two reference pages look alike. */
+  .prose pre{background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:14px 16px;overflow-x:auto;margin:14px 0;font:13px/1.6 'JetBrains Mono',ui-monospace,Menlo,Consolas,monospace}
+  .prose pre code{background:none;border:none;padding:0;font-size:inherit}
+  .note{background:var(--bg2);border-left:3px solid var(--teal);border-radius:0 8px 8px 0;padding:12px 16px;margin:16px 0}
+  .note p{margin:0}
+  .shot{position:sticky; top:74px}
+  .cap{text-align:center; font-family:'JetBrains Mono',monospace; font-size:.68rem; color:var(--mut); margin-top:10px; letter-spacing:.04em}
+
+  /* T-Deck frame: the real screenshot + a generated QWERTY keyboard (added in JS) */
+  .device{width:344px; margin:0 auto; background:#16191d; border-radius:16px; padding:12px 12px 9px; border:1px solid #e9ece7; box-shadow:0 24px 60px -30px rgba(21,24,30,.5)}
+  .device img.screen{display:block; width:320px; height:240px; border-radius:8px}
+  .kbd{margin:9px auto 2px; display:flex; flex-direction:column; gap:4px; width:312px}
+  .kr{display:flex; gap:4px; justify-content:center}
+  .key{flex:1; max-width:28px; height:15px; background:#23282e; border-radius:4px; display:grid; place-items:center; font:8px/1 system-ui; color:#7d8893}
+  .key.wide{max-width:140px; flex:4}
+
+  .gallery{display:grid; grid-template-columns:repeat(auto-fill,minmax(232px,1fr)); gap:20px; margin-top:18px}
+  .mini{background:#16191d; border-radius:12px; padding:7px; border:1px solid #e9ece7}
+  .mini img{display:block; width:100%; height:auto; border-radius:6px}
+  .mini .cap{margin-top:6px}
+  .webgrid{display:grid; grid-template-columns:repeat(auto-fill,minmax(178px,1fr)); gap:18px; margin-top:22px}
+  figure.phone{margin:0; background:#16191d; border-radius:20px; padding:8px; border:1px solid #e9ece7; box-shadow:0 18px 44px -26px rgba(21,24,30,.5)}
+  figure.phone img{display:block; width:100%; height:auto; border-radius:13px}
+  figure.phone figcaption{text-align:center; font-family:'JetBrains Mono',monospace; font-size:.66rem; color:var(--mut); margin-top:8px; letter-spacing:.04em}
+  .subh{font-size:1.06rem; font-weight:700; color:var(--ink); margin:30px 0 2px}
+
+  /* Settings-page detail cards: real screenshot + what the page does + its controls */
+  .sgrp{font-family:'JetBrains Mono',monospace; font-size:.7rem; letter-spacing:.14em; text-transform:uppercase; color:var(--mut); margin:30px 0 0; padding-top:4px}
+  .scards{display:grid; grid-template-columns:repeat(auto-fill,minmax(290px,1fr)); gap:20px; margin-top:13px}
+  .scard{border:1px solid var(--line); border-radius:14px; background:#fff; padding:13px; display:flex; flex-direction:column}
+  .scard .thumb{background:#16191d; border-radius:9px; padding:6px}
+  .scard .thumb img{display:block; width:100%; height:auto; border-radius:5px}
+  .scard .thumb.ph{aspect-ratio:4/3; display:grid; place-items:center; border:1px dashed #39424b; padding:0}
+  .scard .thumb.ph span{font-family:'JetBrains Mono',monospace; font-size:.6rem; letter-spacing:.12em; color:#7d8893; text-transform:uppercase}
+  .scard h3{font-size:1.04rem; margin:12px 0 2px; color:var(--ink); display:flex; align-items:center; gap:8px; flex-wrap:wrap}
+  .scard h3 .tag{font-family:'JetBrains Mono',monospace; font-size:.58rem; letter-spacing:.05em; text-transform:uppercase; color:var(--teal-ink); background:rgba(21,182,166,.1); border-radius:5px; padding:2px 6px; font-weight:600}
+  .scard .lede{color:var(--mut); font-size:.9rem; margin:2px 0 9px}
+  .scard ul{margin:0; padding-left:17px}
+  .scard li{margin:4px 0; font-size:.89rem; color:#3c454d; line-height:1.5}
+  .scard li b{color:var(--ink); font-weight:600}
+
+  /* Caution callout (amber) */
+  .callout{display:flex; gap:11px; margin-top:18px; padding:13px 15px; border-radius:11px; background:#fff7ed; border:1px solid #f6dcb8}
+  .callout .cico{flex:none; width:20px; height:20px; color:#c2740b; margin-top:1px}
+  .callout .cico svg{width:20px; height:20px}
+  .callout b{display:block; color:#7c4a03; margin-bottom:3px; font-size:.94rem}
+  .callout p{margin:0; color:#7a5320; font-size:.9rem; line-height:1.55}
+
+  footer{border-top:1px solid var(--line); padding:26px 22px; text-align:center; color:var(--mut); font-size:.85rem}
+  @media(max-width:980px){
+    .shell{grid-template-columns:1fr; gap:0}
+    nav.toc{position:static; height:auto; border-bottom:1px solid var(--line); padding:14px 0; display:flex; gap:6px; overflow:auto; white-space:nowrap}
+    nav.toc .grp{display:none} nav.toc a{border-left:0; flex:none}
+    .shot{position:static; margin:0 auto 6px}
+  }
+</style>
+</head>
+<body>
+
+<div class="top">
+  <a class="word" href="index.html">WADA<span class="t">MESH</span></a>
+  <span class="tag">Docs</span>
+  <span class="sp"></span>
+  <a class="home" href="index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg> Back to site</a>
+</div>
+
+<div class="shell">
+  <nav class="toc" id="toc">
+    <div class="grp">Start here</div>
+    <a href="#overview">Overview</a>
+    <div class="grp">The five tabs</div>
+    <a href="#home">Home</a>
+    <a href="#chat">Chat</a>
+    <a href="#contacts">Contacts</a>
+    <a href="#map">Map</a>
+    <a href="#settings">Settings</a>
+    <div class="grp">Finding nodes</div>
+    <a href="#discover">Discover &amp; wardriving</a>
+    <div class="grp">With your phone</div>
+    <a href="#companion">Companion mode</a>
+    <a href="#remote">Remote &amp; web app</a>
+    <a href="#web">Web browser</a>
+    <div class="grp">Reference</div>
+    <a href="#updates">Updates &amp; test builds</a>
+    <a href="#settings-pages">Settings pages</a>
+    <a href="#apps">Apps</a>
+    <a href="#translations">Translating WADAMESH</a>
+  </nav>
+
+  <main>
+    <div class="hero" id="overview">
+      <h1>WADAMESH user guide</h1>
+      <p>WADAMESH turns a LilyGo T-Deck — its landscape screen, BlackBerry-style keyboard and trackball — into a complete front-end for your MeshCore radio: chat, channels, contacts, a live map and deep radio settings, all on the device. (It also runs on the Heltec V4 and Tanmatsu.) Every screen below is a real screenshot from the device.</p>
+      <div class="meta">
+        <span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg> No phone required</span>
+        <span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12.55a11 11 0 0 1 14 0"/><path d="M8.5 16.4a5 5 0 0 1 7 0"/><line x1="12" y1="20" x2="12" y2="20"/></svg> LoRa + Wi-Fi + Bluetooth</span>
+        <span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/></svg> Keyboard + touch</span>
+      </div>
+      <div class="callout">
+        <span class="cico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h11l5 5v11a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V4z"/><path d="M9 4v4M13 4v4"/></svg></span>
+        <div>
+          <b>Got a microSD slot? Keep a card inserted.</b>
+          <p>On devices with a microSD slot (the LilyGo T-Deck and Tanmatsu), wadamesh is best used with a card in place. It keeps map tiles, your contacts and your chat history on the card, which is roomier and far more reliable than the small internal flash, so a card prevents memory issues and stops that data being lost on reboot. The Heltec V4 has no card slot and manages fine on its internal storage.</p>
+        </div>
+      </div>
+    </div>
+
+    <section class="doc" id="home">
+      <h2><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg></span> Home</h2>
+      <div class="row">
+        <div class="prose">
+          <p>The home tab is your <b>app launcher</b> — a grid of everything on the device:</p>
+          <ul>
+            <li><b>Cmdr</b> — the command centre overview.</li>
+            <li><b>Chats</b>, <b>Contacts</b>, <b>Map</b>, <b>Mentions</b> — jump straight to those.</li>
+            <li><b>Advertise</b> — announce yourself to the mesh (manual or on a timer).</li>
+            <li><b>Signal</b> and <b>Monitor</b> — live RX signal and a repeater-style RF activity view.</li>
+            <li><b>Spectrum</b> — sweep the LoRa band for interference.</li>
+            <li><b>Settings</b>, <b>Terminal</b> (MeshCore CLI), <b>Files</b> (microSD).</li>
+          </ul>
+          <p>The bar along the bottom is always there — it switches the five main tabs (Chat, Contacts, Home, Map, Settings) from anywhere. The top bar shows unread count, time, signal and battery.</p>
+          <h3>Building it yourself <span class="tag">Dev</span></h3>
+          <p>Firmware for the ESP32-S3 boards builds with PlatformIO from the repo. The <b>Tanmatsu</b> is different: it runs under badge.team's launcher as an app rather than as standalone firmware, and flashing it the usual way replaces the launcher OS. There is a separate guide for that: <a href="tanmatsu.html">Sideloading on the Tanmatsu</a>.</p>
+          <p>If you only want to write software for the device, you do not need a firmware build at all: see the <a href="sdk.html">Lua app SDK</a>.</p>
+          <h3>Is my history actually saving? <span class="tag">Cmdr</span></h3>
+          <p><b>Settings &rarr; About &rarr; Chat store</b> is the answer: it names the storage backend in use, when history last saved successfully, and the exact stage and error a failing save is hitting. Worth a look if messages seem to vanish across a reboot.</p>
+        </div>
+        <div class="shot"><div class="device"><img class="screen" src="docs-img/home.png" alt="Home app launcher"></div><div class="cap">Home — app launcher</div></div>
+      </div>
+    </section>
+
+    <section class="doc" id="chat">
+      <h2><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span> Chat</h2>
+      <div class="row">
+        <div class="prose">
+          <p>Every conversation in one list, newest first — both <b>channels</b> (group chats like <code>#wadamesh</code>, <code>Public</code>) and <b>direct messages</b>. An unread badge shows the count.</p>
+          <h3>On each row</h3>
+          <ul>
+            <li><b>Tap</b> a row to open the conversation, then type on the keyboard to reply.</li>
+            <li>The <b>gear</b> on the right opens that chat's settings — mute, region &amp; scope, share secret, blocked users, remove — the same screen as the cog inside a chat.</li>
+          </ul>
+          <p>The top-right buttons add a contact, mark everything read, and show your QR code.</p>
+        </div>
+        <div class="shot"><div class="device"><img class="screen" src="docs-img/chat.png" alt="Chat channel list"></div><div class="cap">Chat — channels &amp; DMs</div></div>
+      </div>
+    </section>
+
+    <section class="doc" id="contacts">
+      <h2><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></span> Contacts</h2>
+      <div class="row">
+        <div class="prose">
+          <p>Everyone your node knows — name, type and how recently you heard them. Tap a contact to message it or open its details: signal history, a route trace, telemetry, and share/favourite options.</p>
+          <p>The <b>overflow menu</b> (top right) holds Search, the <b>Discovered</b> list (nodes heard but not yet added), Add contact, Auto-add settings, and the Blocked list. That list is passive, built from what the device overhears; to go looking for nodes actively, see <a href="#discover">Discover</a>. Auto-add can pull new nodes in from their adverts, or you can add them by hand.</p>
+        </div>
+        <div class="shot"><div class="device"><img class="screen" src="docs-img/contacts.png" alt="Contacts list"></div><div class="cap">Contacts</div></div>
+      </div>
+    </section>
+
+    <section class="doc" id="map">
+      <h2><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l-6 3V6l6-3 6 3 6-3v15l-6 3-6-3z"/><path d="M9 3v15"/><path d="M15 6v15"/></svg></span> Map</h2>
+      <div class="row">
+        <div class="prose">
+          <p>An OpenStreetMap / OpenTopoMap view with your position and your contacts plotted as markers, plus link lines from you to each node. Tiles are fetched over Wi-Fi through the wadamesh proxy and cached to flash (or microSD), so areas you've viewed work offline. Coloured dots along a route you have walked or driven come from <a href="#discover">wardriving</a>.</p>
+          <p>It also has a line-of-sight analyzer: pick a contact and it uses SRTM elevation to show whether terrain blocks the path.</p>
+        </div>
+        <div class="shot"><div class="device"><img class="screen" src="docs-img/map.png?v=2" alt="Map"></div><div class="cap">Map</div></div>
+      </div>
+      <div class="prose">
+        <h3>Bring your own tiles (offline maps)</h3>
+        <p>You don't need Wi-Fi to see the map. Copy a standard OpenStreetMap tile pack onto the T-Deck's microSD card and the map reads straight off the card, fully offline.</p>
+        <p><b>Where they go.</b> Use the usual slippy-map <code>z/x/y</code> folder layout, in either of these locations on the card:</p>
+        <ul>
+          <li><code>/maps/osm/&lt;z&gt;/&lt;x&gt;/&lt;y&gt;.png</code> &mdash; the Meshtastic / MeshCore standard layout (recommended, so packs are interchangeable between apps).</li>
+          <li><code>/tiles/&lt;z&gt;/&lt;x&gt;/&lt;y&gt;.png</code> &mdash; also read. This is the same folder the Wi-Fi download cache uses, so your own tiles and downloaded ones live side by side.</li>
+        </ul>
+        <p><b>Format.</b> 256&times;256 <code>.png</code> tiles (<code>.jpg</code> also works). <code>z</code> is the zoom level and <code>x</code>/<code>y</code> the tile column/row at that zoom &mdash; the same scheme OSM's own tile server and every XYZ tile downloader use, so most ready-made packs drop in unchanged.</p>
+        <p><b>Turn it on.</b> Open the map's options (the gear button on the map) and switch on <b>Tiles from SD card</b>; the status line confirms <code>Map tiles: microSD</code>. Turn it back off to fetch live tiles over Wi-Fi again.</p>
+        <p><b>Making a pack.</b> Any XYZ / slippy-map tile downloader works &mdash; point it at OpenStreetMap for your area and a sensible zoom range, then copy the resulting <code>z/x/y</code> folders onto the card. Each extra zoom level roughly quadruples the tile count, so grab only the levels you'll actually use.</p>
+        <div class="callout">
+          <span class="cico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg></span>
+          <div>
+            <b>Board differences</b>
+            <p>The "Tiles from SD card" toggle is a T-Deck feature. The Heltec V4 has no microSD slot, so it caches downloaded tiles to a small internal partition (no offline packs there). On the Tanmatsu, tiles &mdash; your own or downloaded &mdash; live at <code>/tiles/&lt;z&gt;/&lt;x&gt;/&lt;y&gt;.jpg</code> on the microSD card; drop JPEG tiles there and they show alongside the downloaded ones.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="doc" id="discover">
+      <h2><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/><path d="M6.3 6.3l2.1 2.1M15.6 15.6l2.1 2.1M17.7 6.3l-2.1 2.1M8.4 15.6l-2.1 2.1"/></svg></span> Discover &amp; wardriving</h2>
+      <div class="prose" style="max-width:64ch">
+        <p><b>Discover</b> is an app in the home launcher. It does something the rest of the firmware never does: instead of waiting to overhear other nodes, it <b>asks</b>. It broadcasts a request that neighbouring repeaters answer directly, so anything that replies is provably reachable from exactly where you are standing.</p>
+
+        <div class="note"><p><b>Two similar names, two different things.</b> The <b>Discovered</b> list in the Contacts overflow menu is passive: nodes you happened to overhear, waiting to be added. The <b>Discover app</b> is active: it transmits a request and lists who answers. This section is about the app.</p></div>
+
+        <h3>What you see</h3>
+        <p>A live list of everything answering right now, strongest signal first. Each row shows the node's name (or <code>Node &middot;A1B2</code> from its key if it is not a contact yet), its signal, how many hops away it is, and how long ago it replied. <b>Tap a row to add that node as a contact.</b></p>
+        <p>The list is live rather than historical: a node that stops answering for more than about eight seconds drops off it. That is the point, because the question being answered is "what can I reach from here, now".</p>
+
+        <h3>Wardriving: mapping your coverage</h3>
+        <p>If the device has a <b>GPS fix</b>, Discover starts recording while it scans. There is nothing to switch on. Every time you move roughly 15 metres, or every 20 seconds if you stay put, it takes a sample: your position, plus every node answering at that moment.</p>
+        <p>Because a reply proves reachability from that spot, the trail of samples is a map of <b>your own radio coverage</b>. Open the <b>Map</b> tab and the samples are drawn as coloured dots along the route you walked or drove: <span style="color:#53C06B"><b>green</b></span> where the best signal was strong, <span style="color:#D7574E"><b>red</b></span> where it was weak.</p>
+        <p>The footer of the Discover app tells you what is happening: <code>Wardrive: 42 coverage pts &middot; 137 logged to SD</code>, or <code>waiting for GPS fix</code> if there is no position yet.</p>
+
+        <h3>How to do a wardrive</h3>
+        <ol>
+          <li>Put a <b>microSD card</b> in, if your board takes one. Without it the map still works, but nothing survives a reboot.</li>
+          <li>Wait for a <b>GPS fix</b>. The footer says so plainly when it is still waiting.</li>
+          <li>Open <b>Discover</b> from the home launcher and leave it open.</li>
+          <li>Go for a walk or a drive. Samples are taken automatically as you move.</li>
+          <li>Open the <b>Map</b> tab to see the coverage dots along your route.</li>
+        </ol>
+        <p>Discover keeps transmitting while it is open, so it uses more power and more airtime than sitting idle. It is a tool to use deliberately for a while, not something to leave running all day.</p>
+
+        <h3>The log file</h3>
+        <p>Every sighting is appended to <code>/meshcomod/discover/wardrive.csv</code> on the card, one row per node per sample:</p>
+        <pre><code>epoch,lat,lon,type,pubkey,rssi,snr,hops</code></pre>
+        <p>That is a plain CSV, so it opens in any spreadsheet or mapping tool. It is the only part of a wardrive that survives a reboot: the coloured dots on the map are held in memory and the newest 160 samples are kept, so a long drive keeps the most recent stretch rather than the whole thing.</p>
+        <p>There is <b>no on-device viewer</b> for the log. You can see the file in the Files app, but reading the sightings back means taking the card to a computer.</p>
+      </div>
+    </section>
+
+    <section class="doc" id="settings">
+      <h2><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-2.4.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 8 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-2.4 1.65 1.65 0 0 0-1.51-1H1a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 3 8z"/></svg></span> Settings</h2>
+      <div class="row">
+        <div class="prose">
+          <p>A tile for each category. Tap one to open its page; the title bar carries a back chevron. The full set is in <a href="#settings-pages">Settings pages</a> below.</p>
+          <ul>
+            <li><b>Profile</b> — your name and node identity.</li>
+            <li><b>Radio &amp; Mesh</b> — frequency, spreading factor, region scope, high-gain receiver, signal probe, auto-advert.</li>
+            <li><b>Auto-add, Wi-Fi, Bluetooth, GPS</b> — discovery and connectivity.</li>
+            <li><b>Clock, Battery, Sensors, Display, Keyboard, Sound, Quick replies, Lock screen</b> — the device experience.</li>
+            <li><b>Language</b> (twelve UI languages), <b>Backups</b>, and <b>About</b> (firmware version, update check, diagnostics).</li>
+          </ul>
+        </div>
+        <div class="shot"><div class="device"><img class="screen" src="docs-img/settings.png" alt="Settings categories"></div><div class="cap">Settings categories</div></div>
+      </div>
+    </section>
+
+    <section class="doc" id="companion">
+      <h2><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="11" y1="18" x2="13" y2="18"/></svg></span> Companion mode</h2>
+      <div class="row">
+        <div class="prose">
+          <p>WADAMESH runs everything on its own, but it can also be the radio for the <b>official MeshCore app</b> on your phone (iOS and Android). Your phone brings the big screen and full keyboard; the device does the LoRa. Best of all it works <b>alongside</b> the on-device UI — you can keep using the touch screen while your phone is connected, and your contacts, channels and messages stay in sync between them.</p>
+          <h3>Three ways to connect</h3>
+          <ul>
+            <li><b>USB</b> — plug the device into an Android phone or a computer; the app connects over the cable. Nothing to set up on the device.</li>
+            <li><b>Bluetooth</b> — turn on Bluetooth in <b>Settings &rarr; Bluetooth</b>. The device appears in the app as <code>MeshCore-&lt;your node name&gt;</code>; pair with the 6-digit code (default <code>123456</code>, changeable on the same page).</li>
+            <li><b>Wi-Fi</b> — put the device on your network in <b>Settings &rarr; Wi-Fi</b>. On the same Wi-Fi, the app connects to the device's IP address on port <code>5000</code> (the Wi-Fi page shows the IP).</li>
+          </ul>
+          <div class="callout">
+            <span class="cico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span>
+            <div>
+              <b>Run Bluetooth and Wi-Fi together only when you need to</b>
+              <p>Bluetooth and Wi-Fi can be on at the same time, but each one reserves a good chunk of RAM. On the Heltec V4 especially — it has the least free memory of the three boards — keeping both on at once leaves little headroom and can lead to instability or odd behaviour. If you only want the phone app, pick one transport (Bluetooth or Wi-Fi) and leave the other off; if you mostly use the device on its own, keep both off.</p>
+            </div>
+          </div>
+        </div>
+        <div class="shot"><div class="device"><img class="screen" src="docs-img/set_bluetooth.png" alt="Bluetooth pairing page"></div><div class="cap">Bluetooth &mdash; pairing code</div></div>
+      </div>
+    </section>
+
+    <section class="doc" id="remote">
+      <h2><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 16.1A5 5 0 0 1 5.9 20M2 12.05A9 9 0 0 1 9.95 20M2 8V6a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-6"/><line x1="2" y1="20" x2="2.01" y2="20"/></svg></span> Remote &amp; web app</h2>
+      <div class="row">
+        <div class="prose">
+          <p>Over Wi-Fi, a WADAMESH device can put its screen &mdash; or a whole browser app &mdash; on your phone or laptop. There is nothing to install: the device serves a web page you open in any browser on the same network. Turn it on from <b>Home &rarr; Remote</b> (or the Remote screen in Settings), pick a mode, and open the address it shows.</p>
+          <h3>Three ways to connect</h3>
+          <ul>
+            <li><b>Remote app</b> (recommended) &mdash; a full control panel, native to the browser: <b>Chats</b>, <b>Contacts</b>, a <b>Terminal</b> and <b>Settings</b>, with live message notifications. Run the device entirely from your phone.</li>
+            <li><b>Screen mirror (VNC)</b> &mdash; streams the device's live screen to the browser and sends your taps and key presses back, so you see and drive exactly what is on the device, in real time.</li>
+            <li><b>Remote UI</b> &mdash; renders the interface off-screen at desktop size (a wide landscape layout) and streams that instead of the small panel, for a roomier view on a big screen.</li>
+          </ul>
+          <p>Screen mirror and Remote UI both show the same interface you already know from the device &mdash; mirrored, or drawn larger. The <b>Remote app</b> is different: a browser-native panel built for a phone, shown below.</p>
+          <h3>Turning it on</h3>
+          <p>Connect the device to Wi-Fi first, then open <b>Home &rarr; Remote</b>. The screen shows the address to type into your browser (like <code>http://192.168.1.42</code>) and a switch for each mode. Only one streaming mode runs at a time, and the phone and the device must be on the same Wi-Fi network.</p>
+        </div>
+        <div class="shot"><div class="device"><img class="screen" src="docs-img/app_remote.png" alt="Remote access screen on the device"></div><div class="cap">Remote &mdash; turn it on, then open the address</div></div>
+      </div>
+
+      <div class="subh">The remote app in a browser</div>
+      <div class="prose" style="max-width:70ch"><p>The remote app is phone-first. It carries the same status icons as the device (signal, Wi-Fi, Bluetooth, battery), pops up a notification when a message arrives, and refreshes an open chat on its own as replies come in &mdash; so you rarely need to touch the device itself.</p></div>
+      <div class="webgrid">
+        <figure class="phone"><img src="docs-img/web_chats.png" alt="Chats tab in the web app"><figcaption>Chats &mdash; DMs, channels, unread badges</figcaption></figure>
+        <figure class="phone"><img src="docs-img/web_chat.png" alt="A conversation in the web app"><figcaption>A conversation, with delivery ticks</figcaption></figure>
+        <figure class="phone"><img src="docs-img/web_contacts.png" alt="Contacts tab in the web app"><figcaption>Contacts &mdash; search, sort, filter</figcaption></figure>
+        <figure class="phone"><img src="docs-img/web_contact_sheet.png" alt="Contact actions in the web app"><figcaption>Tap a contact for actions</figcaption></figure>
+        <figure class="phone"><img src="docs-img/web_discovered.png" alt="Discovered nodes in the web app"><figcaption>Discovered nodes &mdash; add with a tap</figcaption></figure>
+        <figure class="phone"><img src="docs-img/web_settings.png" alt="Settings in the web app"><figcaption>Settings &mdash; including live radio</figcaption></figure>
+        <figure class="phone"><img src="docs-img/web_terminal.png" alt="Terminal in the web app"><figcaption>Terminal &mdash; the MeshCore CLI</figcaption></figure>
+      </div>
+    </section>
+
+    <section class="doc" id="web">
+      <h2><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></span> Web browser</h2>
+      <div class="row">
+        <div class="prose">
+          <p>WADAMESH can read the web on its own screen. Open the <b>Web</b> app from the home launcher, type an address, and the device fetches the page and shows it as plain, readable text &mdash; articles, wikis, docs, simple sites. There is no proxy in the middle and nothing is tracked: it pulls the page straight from the site and strips it down to the words.</p>
+          <ul>
+            <li><b>Text only</b> &mdash; no JavaScript, no images, no ads. Pages load small and read clean.</li>
+            <li><b>Tappable links</b> &mdash; follow a link to the next page, with <b>back</b>, <b>forward</b> and <b>refresh</b> in the toolbar.</li>
+            <li><b>Direct &amp; private</b> &mdash; the device connects to the site itself over Wi-Fi (HTTPS); no server of ours sees what you read.</li>
+          </ul>
+          <p>Reading the web on-device takes more memory than the smallest board carries, so the Web app is on the <b>T-Deck</b> and <b>Tanmatsu</b>. On the 2&nbsp;MB Heltec&nbsp;V4 it is hidden &mdash; that board can't complete the secure handshake &mdash; but you can still bounce any link to your phone (below).</p>
+        </div>
+        <div class="shot"><div class="device"><img class="screen" src="docs-img/app_web.png" alt="The on-device Web app"></div><div class="cap">Web &mdash; open an address, read it as text</div></div>
+      </div>
+
+      <div class="subh">Links in chat</div>
+      <div class="prose" style="max-width:70ch"><p>A link that arrives in a message is now tappable. Tap it for a small menu: <b>Open in web</b> loads the page in the on-device browser (T-Deck and Tanmatsu), and <b>Create QR</b> puts a scannable QR code on screen so you can open the link on your phone. Create QR works on <em>every</em> board, including the Heltec&nbsp;V4 &mdash; so even where the browser isn't available, a link is one tap from your phone.</p></div>
+      <div class="gallery">
+        <div class="mini"><img src="docs-img/app_web_links.png" alt="Tapping a link in chat opens a menu"><div class="cap">Tap a link &mdash; Open in web, or Create QR</div></div>
+        <div class="mini"><img src="docs-img/app_web_qr.png" alt="A QR code for a link from chat"><div class="cap">Create QR &mdash; scan to open on your phone</div></div>
+      </div>
+    </section>
+
+    <section class="doc" id="updates">
+      <h2><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg></span> Updates &amp; test builds</h2>
+      <div class="row">
+        <div class="prose">
+          <p>On the boards that update over Wi-Fi (the Heltec V4 and the standalone T-Deck), WADAMESH checks for new firmware on its own. When one is available, <b>Settings &rarr; About</b> shows it and you can flash it straight from the device with <b>Install update</b>, no computer needed. (Under Launcher and on the Tanmatsu you update through Launcher or the app store instead.)</p>
+          <h3>Two channels: Stable and Test</h3>
+          <ul>
+            <li><b>Stable</b> is the default. It is the build that has been tested and is recommended for everyday use. Leave your device on this unless you want to help test.</li>
+            <li><b>Test (beta)</b> gets new features and fixes earlier, before they are proven. It can be rough, so it is meant for trying things early and reporting bugs, not for a device you rely on.</li>
+          </ul>
+          <h3>Turn on test builds</h3>
+          <p>Flip <b>Settings &rarr; About &rarr; "Get test builds (beta)"</b> on. From then on, both the update check and <b>Install update</b> follow the test channel, so the device offers the newest test build over Wi-Fi. Turn the switch back off to return to stable. You can switch either way at any time.</p>
+          <p>Prefer to start on a test build from scratch? Pick <b>Beta &middot; testing</b> when you flash from <a href="https://flasher.wadamesh.com" target="_blank" rel="noopener">flasher.wadamesh.com</a>.</p>
+        </div>
+        <div class="shot"><div class="device"><img class="screen" src="docs-img/set_about.png" alt="About page"></div><div class="cap">The About page</div></div>
+      </div>
+    </section>
+
+    <section class="doc" id="settings-pages">
+      <h2><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="20" y2="18"/></svg></span> Settings pages</h2>
+      <div class="prose" style="max-width:68ch"><p>WADAMESH splits its settings into nineteen pages. Here is what each one does and the controls you will find on it. Open any page from the Settings tab; a back chevron in the title bar returns you to the grid.</p></div>
+
+      <div class="sgrp">Identity &amp; radio</div>
+      <div class="scards">
+        <div class="scard">
+          <div class="thumb"><img src="docs-img/set_profile.png" alt="Profile settings"></div>
+          <h3>Profile</h3>
+          <div class="lede">Who you are on the mesh.</div>
+          <ul>
+            <li><b>Node name</b> — your callsign on the network</li>
+            <li><b>Advert location</b> plus a share-in-advert toggle</li>
+            <li><b>Identity key</b> and <b>Share QR</b> to hand out your contact</li>
+            <li><b>Export / Import</b> your whole setup as a JSON backup</li>
+          </ul>
+        </div>
+        <div class="scard">
+          <div class="thumb"><img src="docs-img/set_radio___mesh.png" alt="Radio and Mesh settings"></div>
+          <h3>Radio &amp; Mesh</h3>
+          <div class="lede">Every LoRa and mesh parameter, split into RADIO / MESH / SIGNAL.</div>
+          <ul>
+            <li><b>Radio</b> — preset, frequency, bandwidth, spreading factor, coding rate, TX power, with a live duty-cycle and airtime-per-packet readout</li>
+            <li><b>Mesh</b> — answer-telemetry, path-hash size, region scope tag, scope direct messages</li>
+            <li><b>Signal</b> — high-gain receiver (Heltec V4.3), signal probe, and a shortcut to the Advertise app</li>
+            <li><b>Experimental</b> — multi-ACKs, client repeat, RX boost, duty meter</li>
+          </ul>
+        </div>
+        <div class="scard">
+          <div class="thumb"><img src="docs-img/set_auto_add.png" alt="Auto-add settings"></div>
+          <h3>Auto-add</h3>
+          <div class="lede">Which nodes join Contacts automatically from their adverts.</div>
+          <ul>
+            <li>Per-type toggles: <b>chat</b>, <b>repeater</b>, <b>room</b>, <b>sensor</b></li>
+            <li><b>Overwrite oldest</b> when the contact list is full</li>
+            <li><b>Notify</b> when a new contact is added</li>
+            <li><b>Max hops</b> filter for how far away a node can be</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="sgrp">Connectivity</div>
+      <div class="scards">
+        <div class="scard">
+          <div class="thumb"><img src="docs-img/set_wi_fi.png" alt="Wi-Fi settings"></div>
+          <h3>Wi-Fi</h3>
+          <div class="lede">For map tiles, clock sync and update checks.</div>
+          <ul>
+            <li>On / off with a live status line (IP, signal)</li>
+            <li><b>Scan</b> and tap an SSID, or type one in by hand</li>
+            <li><b>Save &amp; reconnect</b> applies live — no reboot</li>
+            <li>Saved network slots for one-tap quick-connect</li>
+          </ul>
+        </div>
+        <div class="scard">
+          <div class="thumb"><img src="docs-img/set_bluetooth.png" alt="Bluetooth settings"></div>
+          <h3>Bluetooth</h3>
+          <div class="lede">Pair with the MeshCore phone app over BLE.</div>
+          <ul>
+            <li><b>Enable Bluetooth</b> with a live mode status line</li>
+            <li>Set a 6-digit <b>pairing code</b> (applies after a reboot)</li>
+          </ul>
+        </div>
+        <div class="scard">
+          <div class="thumb"><img src="docs-img/set_gps.png" alt="GPS settings"></div>
+          <h3>GPS</h3>
+          <div class="lede">The on-board GPS receiver.</div>
+          <ul>
+            <li>On / off with a live <b>fix status</b> (acquiring, 2D/3D, age)</li>
+            <li><b>Serial baud</b> rate (applies after a reboot)</li>
+            <li>Reads "no GPS module" on devices without one</li>
+          </ul>
+        </div>
+        <div class="scard">
+          <div class="thumb"><img src="docs-img/set_mqtt_bridge.png" alt="MQTT bridge settings"></div>
+          <h3>MQTT bridge <span class="tag">experimental</span></h3>
+          <div class="lede">Forward received messages to your own MQTT broker.</div>
+          <ul>
+            <li>Publishes the <b>text, sender and time</b> of messages your node hears to an MQTT broker</li>
+            <li>Broker <b>host, port and topic</b>, plus an <b>encryption key</b></li>
+            <li>Stays off until you <b>accept the privacy note</b> &mdash; anyone who can read the broker sees the messages, so use one you control, never a public broker</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="sgrp">Time &amp; power</div>
+      <div class="scards">
+        <div class="scard">
+          <div class="thumb"><img src="docs-img/set_clock___time.png" alt="Clock and time settings"></div>
+          <h3>Clock &amp; time</h3>
+          <div class="lede">Keep the clock right.</div>
+          <ul>
+            <li><b>Sync clock</b> from the system / NTP</li>
+            <li><b>Time zone</b> picker, or a custom UTC offset with steppers</li>
+            <li><b>12-hour clock</b> toggle</li>
+          </ul>
+        </div>
+        <div class="scard">
+          <div class="thumb"><img src="docs-img/set_battery.png" alt="Battery settings"></div>
+          <h3>Battery</h3>
+          <div class="lede">Power readouts and tuning.</div>
+          <ul>
+            <li><b>Battery &amp; power history</b> chart</li>
+            <li><b>Calibrate</b> — tap to set 100% at the current voltage</li>
+            <li><b>Battery saver</b> throttles the CPU when idle (T-Deck)</li>
+          </ul>
+        </div>
+        <div class="scard">
+          <div class="thumb"><img src="docs-img/set_sensors.png" alt="Sensors settings"></div>
+          <h3>Sensors <span class="tag">Heltec V4</span></h3>
+          <div class="lede">For the V4 Expansion Kit.</div>
+          <ul>
+            <li><b>Expansion Kit</b> configuration</li>
+            <li><b>Show Sensors tab</b> in the bottom bar (applies after restart)</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="sgrp">Experience</div>
+      <div class="scards">
+        <div class="scard">
+          <div class="thumb"><img src="docs-img/set_display.png" alt="Display settings"></div>
+          <h3>Display</h3>
+          <div class="lede">Look and feel.</div>
+          <ul>
+            <li><b>Screen timeout</b> before it sleeps</li>
+            <li><b>UI size</b> — Normal / Large / Huge</li>
+            <li><b>Colourful chat bubbles</b>, distance in miles, hide device name</li>
+            <li><b>Theme colour</b> picker</li>
+          </ul>
+        </div>
+        <div class="scard">
+          <div class="thumb"><img src="docs-img/set_keyboard.png" alt="Keyboard settings"></div>
+          <h3>Keyboard</h3>
+          <div class="lede">Typing and on-device input.</div>
+          <ul>
+            <li><b>Secondary layouts</b> — Cyrillic, Greek, Arabic, French, German and more</li>
+            <li><b>Accent popups</b> — long-press for accented letters</li>
+            <li><b>Enter sends</b> the message (T-Deck)</li>
+            <li><b>Flash</b> the screen and keys on a new message (T-Deck)</li>
+          </ul>
+        </div>
+        <div class="scard">
+          <div class="thumb"><img src="docs-img/set_sound.png" alt="Sound settings"></div>
+          <h3>Sound</h3>
+          <div class="lede">Notification audio.</div>
+          <ul>
+            <li>Master sound plus per-type toggles: <b>message</b>, <b>DM</b>, <b>@mention</b></li>
+            <li>Custom <b>sound files</b> from microSD where supported</li>
+            <li><b>Volume</b> control (T-Deck / Tanmatsu)</li>
+          </ul>
+        </div>
+        <div class="scard">
+          <div class="thumb"><img src="docs-img/set_quick_replies.png" alt="Quick replies settings"></div>
+          <h3>Quick replies</h3>
+          <div class="lede">One-tap canned messages.</div>
+          <ul>
+            <li>Edit <b>six</b> short replies</li>
+            <li>Pick them from the composer to send instantly</li>
+          </ul>
+        </div>
+        <div class="scard">
+          <div class="thumb"><img src="docs-img/set_lock_screen.png" alt="Lock screen settings"></div>
+          <h3>Lock screen <span class="tag">T-Deck</span></h3>
+          <div class="lede">A simple lock when idle.</div>
+          <ul>
+            <li><b>Wallpaper</b> picker and <b>lock text colour</b></li>
+            <li><b>Lock when screen off</b>, then hold to unlock</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="sgrp">System</div>
+      <div class="scards">
+        <div class="scard">
+          <div class="thumb ph"><span>Screenshot pending</span></div>
+          <h3>General</h3>
+          <div class="lede">Device housekeeping.</div>
+          <ul>
+            <li><b>Send advert now</b></li>
+            <li><b>Store data on SD</b> (reboot)</li>
+            <li><b>Run setup again</b> from scratch</li>
+            <li><b>Reboot device</b></li>
+          </ul>
+        </div>
+        <div class="scard">
+          <div class="thumb"><img src="docs-img/set_backups.png" alt="Backups settings"></div>
+          <h3>Backups</h3>
+          <div class="lede">Save and restore your whole config.</div>
+          <ul>
+            <li><b>Export</b> a new JSON backup</li>
+            <li>Restore from the <b>saved list</b></li>
+            <li><b>Factory reset</b> in the danger zone</li>
+          </ul>
+        </div>
+        <div class="scard">
+          <div class="thumb"><img src="docs-img/set_language.png" alt="Language settings"></div>
+          <h3>Language</h3>
+          <div class="lede">Twelve UI languages.</div>
+          <ul>
+            <li>Tap a language; the device reboots to apply</li>
+          </ul>
+        </div>
+        <div class="scard">
+          <div class="thumb"><img src="docs-img/set_about.png" alt="About settings"></div>
+          <h3>About</h3>
+          <div class="lede">Version, updates and diagnostics.</div>
+          <ul>
+            <li><b>Firmware version</b> plus update check / install</li>
+            <li><b>Get test builds (beta)</b> switch: opt into the <a href="#updates">test channel</a></li>
+            <li>Full <b>system diagnostics</b> — uptime, chip, memory, flash, storage</li>
+            <li><b>Device ID</b> and crash-report export</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="doc" id="apps">
+      <h2><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg></span> Apps</h2>
+      <div class="prose" style="max-width:64ch">
+        <p>Tools from the home launcher. <b>RF Monitor</b> is a repeater-style view of recent packets and radio stats; <b>Spectrum</b> sweeps the band so you can spot interference or find a clear frequency.</p>
+        <h3>Writing your own</h3>
+        <p>The Apps drawer is open. Snake, RF Monitor and Airtime are ordinary Lua apps downloaded from the store over Wi-Fi, and anyone can submit one — they are not built into the firmware and they get no privileges yours would not have.</p>
+        <p>An app is a single Lua file plus a one-line manifest, talking to the firmware through the <code>wada.*</code> API. Submit it as a pull request to <a href="https://github.com/ALLFATHER-BV/wadamesh">the repository</a>, or open an issue with the file attached if you would rather not use git. The full procedure — file layout, versioning, and what the review looks for — is in <a href="https://github.com/ALLFATHER-BV/wadamesh/blob/main/deploy/apps/README.md">deploy/apps/README.md</a>.</p>
+        <p><b>Every submission is reviewed and safety-checked before it is added.</b> An app runs on other people's radios, so each one is read for anything touching the node identity, keys or channel secrets, for flash-write patterns that can stall the device, and for anything that would block the UI or the mesh. If something needs changing we say what and why, and we would rather help you land it than turn it away.</p>
+      </div>
+      <div class="gallery">
+        <div class="mini"><img src="docs-img/app_rfmonitor.png" alt="RF Monitor"><div class="cap">RF Monitor</div></div>
+        <div class="mini"><img src="docs-img/app_spectrum.png" alt="Spectrum analyzer"><div class="cap">Spectrum analyzer</div></div>
+      </div>
+    </section>
+
+    <section class="doc" id="translations">
+      <h2><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 8 6 6"/><path d="m4 14 6-6 2-3"/><path d="M2 5h12"/><path d="M7 2h1"/><path d="m22 22-5-10-5 10"/><path d="M14 18h6"/></svg></span> Translating WADAMESH</h2>
+      <div class="prose" style="max-width:64ch">
+        <p>The interface ships in thirteen languages besides English, and every one of them was written by somebody who uses the device. Corrections and new languages are welcome. This section is the whole procedure, because getting it wrong is easy and the failure is quiet.</p>
+
+        <h3>Edit one file, and only that file</h3>
+        <p>The canonical source for a language is:</p>
+        <pre><code>deploy/apps/lang/&lt;code&gt;.lang</code></pre>
+        <p>for example <code>hu.lang</code>, <code>de.lang</code>, <code>nl.lang</code>. It is a plain UTF-8 text file, one string per line, with the English original and your translation separated by a <b>single TAB</b>:</p>
+        <pre><code>Contacts	Névjegyek
+No SD card	Nincs SD-kártya</code></pre>
+        <p>A short header at the top carries the language code, its name as it appears in the picker, and a version number.</p>
+
+        <div class="note"><p><b>Do not edit <code>src/ui-touch/i18n_builtin.h</code>.</b> It is a <i>generated</i> file and says so on its first line. It is rebuilt from the <code>.lang</code> files by a script, so anything typed into it directly is thrown away the next time anyone regenerates it — and it never reaches the language Store either, so devices that download their language would keep the old text while devices using the built-in copy showed the new. Two sources of truth, silently disagreeing. Put the work in the <code>.lang</code> file and it lands in both.</p></div>
+
+        <h3>Rules that keep a language file safe</h3>
+        <ul>
+          <li><b>The English side is a key, not a label.</b> It has to match the firmware's string exactly — every character, including the ellipsis <code>…</code> where the original uses one rather than three dots. A key that does not match is simply never used, and nothing warns you.</li>
+          <li><b>Placeholders must survive.</b> If the English contains <code>%s</code>, <code>%d</code> or <code>%u</code>, your line needs the same ones, the same number of times, in an order that still makes sense. The firmware checks this and <i>ignores</i> a line whose placeholders do not match, because a mismatch there can crash the device.</li>
+          <li><b>A newline is written <code>\n</code></b>, two characters, exactly as in the English. A real line break would end the entry.</li>
+          <li><b>No tab characters inside a translation</b> — the tab is the separator.</li>
+          <li><b>Leave the technical strings alone.</b> Units and protocol terms (<code>SF</code>, <code>CR</code>, <code>MHz</code>, <code>dBm</code>, <code>GPS</code>, <code>Wi-Fi</code>, <code>Bluetooth</code>) and the product name are meant to stay as they are.</li>
+          <li><b>Watch the length.</b> Buttons and list rows are sized for the English. A translation twice as long will be cut off on a small screen — prefer the shorter phrasing where there is a choice.</li>
+        </ul>
+
+        <h3>How to send it</h3>
+        <p>A pull request that changes only <code>deploy/apps/lang/&lt;code&gt;.lang</code> is the easiest thing to review and merge. If you would rather not use git, open an issue and attach the file, or paste the lines you have changed — that is just as welcome, and we will do the rest.</p>
+        <p>What happens on our side: the version number is bumped, the file is republished to the language Store so existing devices are offered the update, and the compiled-in table is regenerated so a fresh install has it too. You do not need to do any of that.</p>
+
+        <h3>Starting a new language</h3>
+        <p>Copy an existing file, change the header's code and name, and translate as much as you have patience for. <b>Partial is fine.</b> Any line you leave out falls back to English, so a half-finished language is genuinely useful on day one and can be filled in over time.</p>
+
+        <h3>Finding what still needs doing</h3>
+        <p>Strings are added and reworded as the firmware grows, so a language drifts. Open an issue asking for the current gaps for your language and we will generate the list: exactly which strings are missing, and which are still sitting in English. It is usually a couple of dozen lines rather than a thousand.</p>
+        <p>One thing worth knowing when a translation you wrote seems to have disappeared: if the English wording itself was changed — say a setting was renamed to be more specific — the old key no longer matches anything, and the translation attached to it goes unused. It has not been deleted or rejected. It just needs re-pointing at the new English, which is a good moment to check the meaning still fits.</p>
+      </div>
+    </section>
+  </main>
+</div>
+
+<footer>WADAMESH — open-source MeshCore touch firmware · <a href="index.html">wadamesh.com</a></footer>
+
+<script>
+  var KB = ['QWERTYUIOP', 'ASDFGHJKL', 'ZXCVBNM'];
+  document.querySelectorAll('.device').forEach(function(dev){
+    var kb = document.createElement('div'); kb.className = 'kbd';
+    KB.forEach(function(rowStr){
+      var r = document.createElement('div'); r.className = 'kr';
+      rowStr.split('').forEach(function(ch){ var k = document.createElement('span'); k.className = 'key'; k.textContent = ch; r.appendChild(k); });
+      kb.appendChild(r);
+    });
+    var sp = document.createElement('div'); sp.className = 'kr';
+    sp.innerHTML = '<span class="key">sym</span><span class="key wide"></span><span class="key">&#9166;</span>';
+    kb.appendChild(sp);
+    dev.appendChild(kb);
+  });
+  var links = Array.prototype.slice.call(document.querySelectorAll('nav.toc a'));
+  var obs = new IntersectionObserver(function(es){
+    es.forEach(function(e){ if (e.isIntersecting) {
+      links.forEach(function(l){ l.classList.remove('on'); });
+      var a = document.querySelector('nav.toc a[href="#' + e.target.id + '"]');
+      if (a) a.classList.add('on');
+    }});
+  }, { rootMargin: '-25% 0px -65% 0px' });
+  ['overview','home','chat','contacts','map','settings','companion','settings-pages','apps','translations'].forEach(function(id){ var el = document.getElementById(id); if (el) obs.observe(el); });
+</script>
+</body>
+</html>

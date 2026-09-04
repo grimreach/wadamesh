@@ -1,0 +1,9 @@
+# beta_31 (TEST) — the new chats tab: avatars, message previews, custom channel icons. On top of beta_30.
+# One user-facing note per non-blank, non-# line; # lines are section comments.
+
+# --- New ---
+The chats tab has a fresh look: each conversation now shows a round avatar in that chat's signature colour (the same colour its bubbles use) with the first two letters of the name, the last message previewed under the name, the time top right and the unread count below it. Compact chat mode keeps the dense single-line rows instead, so both styles are available.
+Channels can have a custom icon: open the channel's settings (long-press or the gear) and tap "Chat icon" to pick any emoji as its avatar. Long-press the same entry to go back to the automatic letters. The choice is remembered per channel.
+
+# --- Fixed ---
+Long chat names no longer wrap onto the message preview underneath.

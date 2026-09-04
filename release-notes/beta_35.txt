@@ -1,0 +1,11 @@
+# beta_35 (TEST) - V4 breathing room: freezes fixed, 30 KB of internal RAM back, crash-safe settings. On top of beta_34.
+# One user-facing note per non-blank, non-# line; # lines are section comments.
+
+# --- Fixed ---
+Heltec V4: multi-second freezes right after receiving messages are gone, including the screen refusing to wake from dark mode. Saving chat history to the internal flash could stall the device for up to 6 seconds (the V4 has no SD card, and internal flash pauses for housekeeping); that save now runs on a background task, so the screen and touch stay responsive no matter what storage is doing.
+Turning Bluetooth on while Wi-Fi is running no longer reboots the device when memory is tight: the switch now checks free memory first and tells you "Not enough free memory for Bluetooth. Turn Wi-Fi off first." instead of crashing.
+The same protection applies the other way around: turning Wi-Fi on with Bluetooth active used to claim "Wi-Fi on" while the radio silently never started. It now either really starts or tells you why it cannot.
+Settings could vanish for a single boot after an unlucky reboot (the device came up with a default name once, then recovered). Settings writes are now crash-safe: a reboot or power cut at any moment leaves at least one intact copy on storage, the loader self-heals from it, and a failed save now says "Couldn't save the name to storage" instead of pretending it worked.
+
+# --- Improved ---
+About 30 KB of the ESP32's scarce internal RAM has been freed by moving buffers to the external PSRAM and dropping unused USB components from the build. This is the headroom that makes Wi-Fi and Bluetooth run together comfortably again, especially on the Heltec V4.

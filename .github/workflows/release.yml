@@ -1,0 +1,124 @@
+name: release
+
+# Slice a version by pushing a tag:
+#     git tag beta_13 && git push origin beta_13
+# or run it manually from the Actions tab (provide the tag as input).
+#
+# What it does:
+#   1. builds both touch boards in the cloud, with the tag embedded
+#      (FIRMWARE_RELEASE_TAG) so the on-device beta number matches the tag;
+#   2. creates / updates the GitHub Release for the tag with the 4 bins;
+#   3. publishes the bins to wadamesh.com over SSH **iff** the VPS secrets are
+#      set — so the on-device update check + web flasher pick them up.
+#
+# Safety: nothing sensitive lives in this file. The VPS host + deploy key are
+# GitHub Actions *secrets* (Settings -> Secrets and variables -> Actions):
+#   WADAMESH_VPS          user@host of the firmware VPS
+#   WADAMESH_VPS_PATH     e.g. /srv/wadamesh/firmware
+#   WADAMESH_VPS_SSH_KEY  a deploy private key authorized on that host
+# Until those exist, step 3 is skipped and you publish with scripts/release.sh.
+
+on:
+  push:
+    tags: ['beta_*']
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Release tag to build (e.g. beta_13)'
+        required: true
+
+permissions:
+  contents: write          # create the Release + upload assets (nothing more)
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    env:
+      ENVS: "heltec_v4_tft_companion_radio_usb_tcp_touch LilyGo_TDeck_companion_radio_touch"
+      # true only when the VPS deploy key secret is configured (no secret value is exposed)
+      HAS_VPS: ${{ secrets.WADAMESH_VPS_SSH_KEY != '' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Cache PlatformIO
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.platformio
+            .pio
+          key: pio-${{ runner.os }}-${{ hashFiles('platformio.ini') }}
+
+      - name: Install PlatformIO
+        run: pip install --upgrade platformio
+
+      - name: Resolve tag
+        id: v
+        run: |
+          TAG="${{ github.event.inputs.tag }}"
+          [ -z "$TAG" ] && TAG="${GITHUB_REF_NAME}"
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+          echo "Building release: $TAG"
+      - name: Build both touch boards (tag embedded; Wi-Fi placeholder, no baked creds)
+        env:
+          TAG: ${{ steps.v.outputs.tag }}
+        run: |
+          unset WIFI_SSID WIFI_PWD
+          export PLATFORMIO_BUILD_FLAGS="-DFIRMWARE_RELEASE_TAG='\"${TAG}\"' -DFIRMWARE_VERSION='\"wadamesh ${TAG}\"'"
+          for e in $ENVS; do pio run -t mergebin -e "$e"; done
+      - name: Collect bins
+        env:
+          TAG: ${{ steps.v.outputs.tag }}
+        run: |
+          mkdir -p dist
+          declare -A NAME=(
+            [heltec_v4_tft_companion_radio_usb_tcp_touch]=wadamesh-heltec-v4-tft
+            [LilyGo_TDeck_companion_radio_touch]=wadamesh-tdeck
+          )
+          for e in $ENVS; do
+            n=${NAME[$e]}
+            cp ".pio/build/$e/firmware.bin"        "dist/$n.bin"
+            cp ".pio/build/$e/firmware-merged.bin" "dist/$n-merged.bin"
+          done
+          ls -la dist
+      - name: Web-flasher metadata (version.json + manifests, roll with release)
+        env:
+          TAG: ${{ steps.v.outputs.tag }}
+        run: python3 scripts/build/gen-flasher-meta.py "$TAG" dist "release-notes/$TAG.txt"
+
+      - name: Create / update the GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ steps.v.outputs.tag }}
+        run: |
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            gh release upload "$TAG" dist/* --clobber
+          else
+            gh release create "$TAG" dist/* --title "wadamesh $TAG" \
+              --notes "Touch firmware **$TAG** for the LilyGo T-Deck and Heltec V4 + TFT. Built by CI from \`$GITHUB_SHA\`."
+          fi
+      - name: Publish to wadamesh.com (VPS) — skipped until VPS secrets are set
+        if: env.HAS_VPS == 'true'
+        env:
+          VPS:      ${{ secrets.WADAMESH_VPS }}
+          VPS_PATH: ${{ secrets.WADAMESH_VPS_PATH }}
+          SSH_KEY:  ${{ secrets.WADAMESH_VPS_SSH_KEY }}
+          TAG:      ${{ steps.v.outputs.tag }}
+        run: |
+          mkdir -p ~/.ssh && chmod 700 ~/.ssh
+          printf '%s\n' "$SSH_KEY" > ~/.ssh/id_deploy && chmod 600 ~/.ssh/id_deploy
+          ssh-keyscan -H "${VPS#*@}" >> ~/.ssh/known_hosts 2>/dev/null || true
+          SSH="ssh -i ~/.ssh/id_deploy -o StrictHostKeyChecking=accept-new"
+          REL="$VPS_PATH/releases/TOUCH/$TAG"
+          $SSH "$VPS" "mkdir -p '$REL' '$VPS_PATH/latest'"
+          for n in wadamesh-heltec-v4-tft wadamesh-tdeck; do
+            scp -i ~/.ssh/id_deploy "dist/$n.bin" "dist/$n-merged.bin" "$VPS:$REL/"
+            scp -i ~/.ssh/id_deploy "dist/$n-merged.bin" "dist/$n.bin" "$VPS:$VPS_PATH/latest/"
+          done
+          scp -i ~/.ssh/id_deploy dist/version.json dist/manifest-tdeck.json dist/manifest-heltec-v4-tft.json "$VPS:$VPS_PATH/latest/"
+          $SSH "$VPS" "cd '$VPS_PATH/releases/TOUCH' && python3 -c \"import os,json; b=sorted(d for d in os.listdir('.') if d.startswith('beta_') and os.path.isdir(d)); open('index.json','w').write(json.dumps([{'name':x,'type':'dir'} for x in b], indent=2))\""
+          rm -f ~/.ssh/id_deploy
+          echo "Published $TAG to wadamesh.com"

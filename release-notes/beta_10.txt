@@ -1,0 +1,13 @@
+# beta_10 — what's new (one user-facing note per non-blank, non-# line)
+
+# --- T-Deck input ---
+New trackball mode — switch the T-Deck trackball between a mouse cursor (the default) and D-pad navigation (roll to move the selection, click to choose), under Settings → Keyboard. Handy if you prefer button-style navigation.
+
+# --- Map ---
+microSD map tiles now fill in as you explore: with "Use microSD for tiles" on, the device also downloads any missing tiles over Wi-Fi and saves them straight onto the SD card, so your offline library grows instead of showing blank areas past its edge (thanks 1nerdherder, #20)
+
+# --- Power ---
+Experimental battery saver (idle power-save): throttles the CPU when the device is parked — screen off, on battery, no app connected and the mesh quiet — to trim idle power use, without ever missing a received packet. Off by default; enable it under Settings → System → Battery. (Dan Vybiral / @Vybo, #19)
+
+# --- Settings ---
+New "Battery" section under Settings → System — opens the battery & power-history screen (the same one you get by tapping the battery icon up top) and is where the experimental battery saver now lives (it moved out of the Lock settings).

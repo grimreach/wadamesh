@@ -1,0 +1,8 @@
+# beta_26 (TEST) — storage-reliability fix on top of the current stable (beta_25).
+# One user-facing note per non-blank, non-# line; # lines are section comments.
+
+# --- Fixed ---
+Fixed a reboot loop that could hit while the device saved its contact list. Internal-flash housekeeping during a save could freeze the device long enough to trip the watchdog and restart it; that save no longer trips it. Thanks to the crash report that pinned it down.
+
+# --- Improved ---
+On devices with a microSD card, contacts and channels are now kept on the card (like chat history and map tiles already are). That frees the small internal flash and puts the frequently-rewritten files on the more reliable card. Your existing contacts move to the card automatically the first time; your identity and settings stay in internal flash, so the node is unchanged.

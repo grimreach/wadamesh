@@ -1,0 +1,13 @@
+{
+  "name": "wadamesh — LilyGo T-Deck",
+  "version": "beta_1",
+  "new_install_prompt_erase": true,
+  "builds": [
+    {
+      "chipFamily": "ESP32-S3",
+      "parts": [
+        { "path": "https://firmware.wadamesh.com/latest/wadamesh-tdeck-merged.bin", "offset": 0 }
+      ]
+    }
+  ]
+}

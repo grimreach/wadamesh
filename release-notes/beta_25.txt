@@ -1,0 +1,21 @@
+# beta_25 (STABLE — rolls up the beta_22..25 test builds on top of the previous stable, beta_21.
+# One user-facing note per non-blank, non-# line; # lines are section comments.)
+
+# --- Fixed ---
+The signal probe reads a live signal to your nearest repeater again. It sends the standard mesh node-discovery request that repeaters actually answer (the same one the Ultra and KiekR apps use), so the signal reading updates. Thanks to Tarmo for decoding the exact packet.
+Bluetooth companion reliability, especially messages and repeater / room-server admin. The device no longer floods the Bluetooth link with a per-packet log (USB and Wi-Fi companions still get it), so incoming messages reach the app and admin actions like Manage Regions stop timing out. (Issues #46 and #54.)
+Contacts show up right away. A node you discover, even while you're on another screen or one the phone app adds over Bluetooth, now appears in your contact list immediately instead of only after you change the sort. Thanks to 1nerdherder for the report. (Issue #73.)
+Manual telemetry and status requests now work on the first tap instead of needing a second. Thanks to Dan Vybiral (@Vybo) for the fix. (Issue #81.)
+On the emoji picker and quick-chat replies, pressing Esc or the red X now closes just the popup instead of the whole chat screen.
+Lock screen: you can now unlock the device after the screen wakes from an incoming message.
+
+# --- New ---
+New "Advertise on boot" option in the Advertise app (off by default): turn it on to send one advert when the device powers on, so nearby nodes refresh your details after a reflash. (Issue #76.)
+
+# --- Tanmatsu ---
+Tanmatsu: Wi-Fi map tiles now download and display, cached to the microSD card.
+Tanmatsu: contacts and message history now survive a reboot (moved to the microSD card, so keep a card inserted).
+Tanmatsu: fixed the crash that stopped the app from booting; popups now fit the screen and scroll, and keyboard navigation stays inside an open popup.
+
+# --- Also ---
+This is the new stable build, promoted from the beta_25 test channel. It includes everything from the beta_22, beta_23, beta_24 and beta_25 test builds.

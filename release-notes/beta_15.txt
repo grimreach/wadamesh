@@ -1,0 +1,18 @@
+# beta_15 (one user-facing note per non-blank, non-# line; # lines are section comments)
+
+# --- New ---
+Power-saving now shows as an amber battery icon in the status bar — like iPhone's Low Power Mode — instead of a separate moon icon (T-Deck).
+New @-mention picker: type @ in the message box to pick a contact from a list and drop their name in (thanks robinshizuyo-dev, #42).
+
+# --- Fixed ---
+Closing a settings item, menu or chat no longer snaps the list back to the top — it stays where you left it (thanks ZorkaTheDog, #45).
+Messages you send from the MeshCore companion app now also show up on the device, in the right conversation (thanks HonzaDandy, #46).
+Typing is more reliable on the T-Deck and Tanmatsu: tapping a text field — even one that's already highlighted — starts typing right away, and the accent pop-up no longer interrupts typing outside of chats.
+The text cursor now only appears when a field is actually ready for input, so it's a dependable "you can type now" cue.
+Smoother map panning: tile rendering no longer trips the watchdog and reboots during heavy scrolling.
+
+# --- Changed ---
+Keyboard navigation is now OFF by default. If you prefer driving the UI with the trackball / arrow keys, switch it back on in Settings -> Keyboard (your choice sticks until you change it). The Tanmatsu keeps it on, since it has no touchscreen.
+
+# --- Also in this release ---
+Includes everything from beta_14 and the earlier betas.

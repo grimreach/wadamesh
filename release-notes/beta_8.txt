@@ -1,0 +1,16 @@
+# beta_8 — what's new (one user-facing note per non-blank, non-# line)
+
+# --- Chat ---
+Quick replies now insert at the cursor instead of wiping whatever you'd already typed — tap one mid-message and it's added in place
+Long-press any message for a new one-tap "Ack": it drops a ready-to-send reply into the composer with that message's signal strength (SNR/RSSI) and the route it took, so you can instantly confirm someone's test came through — on a channel it @mentions the sender
+Fixed the message menu (Ack / Copy / Info / Mention / Block) running off the bottom of the screen — it now fits, and scrolls if it ever needs to
+
+# --- Map ---
+The zoom button now shows a clear "+/-" icon
+Each on-map readout can be shown or hidden independently in Map settings — the coordinates line, the tile x/y/z line, and the contact markers
+Map settings are reorganised: the microSD-tiles switch sits at the top under its own heading, separated from the new show/hide toggles
+New auto-refresh button: turn it on and the map re-centres on you automatically whenever your position changes, with an on-screen "Auto-refresh on/off" confirmation
+Fixed the close (X) in Map settings overlapping the switches when the panel was scrolled
+
+# --- Performance ---
+Freed about 19 KB of internal memory, leaving more headroom for Wi-Fi and trimming the idle-memory growth seen in recent betas

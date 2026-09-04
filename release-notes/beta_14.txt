@@ -1,0 +1,7 @@
+# beta_14 — hotfix (one user-facing note per non-blank, non-# line; # lines are section comments)
+
+# --- Fix (headline) ---
+Fixed a bug introduced in beta_13: if you had turned keyboard navigation OFF (Settings -> Keyboard), the physical keyboard stopped typing into text fields entirely on the T-Deck and Tanmatsu. Typing now works again with keyboard navigation off; with it on, nothing changed. (The Heltec V4 was never affected.)
+
+# --- Also in this release ---
+Includes everything from beta_13: room-server posts show the author's name, the Direct (0-hop) contact + map filter, beer emoji with a status-bar unread tap and a new-contact toast toggle and Czech accents, optional trackball edge-scroll, the dedicated special-characters picker, the 12-hour clock applied everywhere, and the keyboard navigation + typing improvements.
