@@ -143,9 +143,7 @@
   // portrait boot guard applies here (that one is HELTEC_LORA_V4_R8-gated).
   #define CAP_ROTATABLE    1
   #define CAP_LARGE_SCREEN 0   // 240x320, same as the V4 TFT
-  // micro-SD on the panel module, sharing the display's SPI bus with its own
-  // CS on GPIO42. Mounted by main.cpp via bbdeckSharedSPI().
-  #define CAP_SD           1
+  #define CAP_SD           0   // the module HAS a microSD slot; not wired yet
   #define CAP_FILESYSTEM   1   // SPIFFS + tiles LittleFS
   #define CAP_GPS          0   // GPS dropped -- its pins are the spare GPIO budget
   #define CAP_OTA          1   // 16 MB flash, dual A/B slots (partitions_tft_touch.csv)
