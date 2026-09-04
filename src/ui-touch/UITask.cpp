@@ -75,7 +75,7 @@ static void* wadaMp3Scratch() { return s_wada_mp3_scratch; }
   static inline esp_err_t esp_core_dump_image_erase() { return ESP_FAIL; }
   #endif
 #endif
-#if defined(HAS_TDECK_GT911) || defined(HAS_THINKNODE_M9) || defined(HELTEC_LORA_V4_R8)
+#if defined(HAS_TDECK_GT911) || defined(HAS_THINKNODE_M9) || defined(HELTEC_LORA_V4_R8) || defined(WADA_BBDECK)
   #include <SD.h>             // microSD — T-Deck/M9 on the LoRa SPI, V4-R8 on the TFT SPI
   #include "SdFastClock.h"    // post-mount operating-clock raise (SD_SPI_FAST_HZ boards)
   #include "sd_diskio.h"      // internal Arduino-SD drive helpers (sdcard_init / sd_*_raw)
@@ -912,8 +912,8 @@ static inline bool luaAudioStorageBusy() {
 }
 #endif
 
-#if defined(HELTEC_LORA_V4_R8) || defined(HAS_THINKNODE_M9)
-static bool fmSdTryMount();   // V4-R8/M9 microSD — fwd decl (defined in the mount-helper block below; sdRestoreRun needs it)
+#if defined(HELTEC_LORA_V4_R8) || defined(HAS_THINKNODE_M9) || defined(WADA_BBDECK)
+static bool fmSdTryMount();   // V4-R8/M9/BB-Deck microSD — fwd decl (defined in the mount-helper block below; sdRestoreRun needs it)
 #endif
 #if defined(HAS_TDECK_GT911) || defined(TLORA_PAGER)
 static constexpr int kI2sSampleRate = 16000;
@@ -11708,7 +11708,7 @@ static void useSdStorageToggleCb(lv_event_t* e) {
                                          : TR("Data -> internal on reboot"), 1800);
 }
 
-#if defined(HAS_TDECK_GT911) || defined(HELTEC_LORA_V4_R8) || defined(TLORA_PAGER) || defined(HAS_THINKNODE_M9)
+#if defined(HAS_TDECK_GT911) || defined(HELTEC_LORA_V4_R8) || defined(TLORA_PAGER) || defined(HAS_THINKNODE_M9) || defined(WADA_BBDECK)
 // "Copy internal data to SD": recovery for the beta_36 upgrades where the live
 // profile was orphaned on internal flash while the honored SD toggle adopted an
 // empty card. Pager resumes only onto a card with no identity or the identical
@@ -13152,7 +13152,7 @@ static void buildDeviceSettings(int sec) {
     lv_obj_add_event_cb(sw, useSdStorageToggleCb, LV_EVENT_VALUE_CHANGED, nullptr);
     y += LV_MAX(40, h + 12);
   }
-#if defined(HAS_TDECK_GT911) || defined(HELTEC_LORA_V4_R8) || defined(TLORA_PAGER) || defined(HAS_THINKNODE_M9)
+#if defined(HAS_TDECK_GT911) || defined(HELTEC_LORA_V4_R8) || defined(TLORA_PAGER) || defined(HAS_THINKNODE_M9) || defined(WADA_BBDECK)
   /* Where contacts ACTUALLY live this boot. The toggle above is only an intent — if the
      card failed to mount at boot (cold/slow card), contacts silently stay on internal flash
      even with it ON. This line shows the truth and flags that mismatch. */
@@ -13192,7 +13192,7 @@ static void buildDeviceSettings(int sec) {
      fresh-identity) card. This copies EVERYTHING from internal flash over the
      card's copies and reboots into the restored profile. This is a SPIFFS->SD
      recovery on T-Deck, V4-R8 and Pager; Tanmatsu uses SD_MMC with no SPIFFS. */
-#if defined(HAS_TDECK_GT911) || defined(HELTEC_LORA_V4_R8) || defined(TLORA_PAGER) || defined(HAS_THINKNODE_M9)
+#if defined(HAS_TDECK_GT911) || defined(HELTEC_LORA_V4_R8) || defined(TLORA_PAGER) || defined(HAS_THINKNODE_M9) || defined(WADA_BBDECK)
   {
     lv_obj_t* b = lv_btn_create(body);
     lv_obj_set_size(b, lv_pct(96), SC(30));
@@ -20293,7 +20293,7 @@ static void fmFmtSize64(uint64_t bytes, char* out, size_t outsz) {
   else                                     snprintf(out, outsz, "%.1f GB", bytes / (1024.0 * 1024 * 1024));
 }
 
-#if defined(HAS_TDECK_GT911) || defined(TLORA_PAGER) || defined(HAS_THINKNODE_M9) || defined(HELTEC_LORA_V4_R8)   // microSD mount/format helpers — Arduino SD on the shared SPI bus
+#if defined(HAS_TDECK_GT911) || defined(TLORA_PAGER) || defined(HAS_THINKNODE_M9) || defined(HELTEC_LORA_V4_R8) || defined(WADA_BBDECK)   // microSD mount/format helpers — Arduino SD on the shared SPI bus
 // One shared-SPI accessor per board: the T-Deck/M9 expose their pre-begun SPIClass
 // via tdeckSharedSPI()/m9SharedSPI(); the V4-R8's microSD shares its TFT FSPI bus
 // (heltecV4R8SharedSPI()); the pager accessor returns the same TFT_eSPI SPIClass
@@ -20304,6 +20304,9 @@ static inline SPIClass* sdSharedSPI() { return tloraPagerSharedSPI(); }
 static inline SPIClass* sdSharedSPI() { return heltecV4R8SharedSPI(); }   // V4-R8: micro-SD shares the TFT FSPI bus (CS=3)
 #elif defined(HAS_THINKNODE_M9)
 static inline SPIClass* sdSharedSPI() { return m9SharedSPI(); }
+#elif defined(WADA_BBDECK)
+extern SPIClass* bbdeckSharedSPI();
+static inline SPIClass* sdSharedSPI() { return bbdeckSharedSPI(); }   // FSPI, shared with the panel + XPT2046 (CS=42)
 #else
 static inline SPIClass* sdSharedSPI() { return tdeckSharedSPI(); }
 #endif

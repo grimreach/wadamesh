@@ -179,6 +179,14 @@ uint16_t ILI9341LCDDisplay::touchGetRawZ() {
 #endif
 }
 
+// The micro-SD slot on the panel module shares this bus (SCK/MOSI/MISO), with
+// its own chip-select. Hand main.cpp the SAME SPIClass the display is using --
+// genuine ESP32 bus sharing needs one host with per-device CS, not a second
+// SPIClass pointed at the same pins (see the T-Lora Pager variant's notes).
+SPIClass* bbdeckSharedSPI() {
+  return &TFT_eSPI::getSPIinstance();   // FSPI/SPI2, begun by begin() above
+}
+
 void ILI9341LCDDisplay::setBrightness(uint8_t pct) {
   if (pct > 100) pct = 100;
   ledcWrite(BL_LEDC_CHANNEL, (uint32_t)((pct * 255 + 50) / 100));

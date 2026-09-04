@@ -52,7 +52,7 @@ static uint32_t _atoi(const char* sp) {
   DataStore store(LittleFS, rtc_clock);
 #elif defined(ESP32)
   #include <SPIFFS.h>
-  #if defined(HAS_TDECK_GT911) || defined(HELTEC_LORA_V4_R8) || defined(TLORA_PAGER) || defined(HAS_THINKNODE_M9)
+  #if defined(HAS_TDECK_GT911) || defined(HELTEC_LORA_V4_R8) || defined(TLORA_PAGER) || defined(HAS_THINKNODE_M9) || defined(WADA_BBDECK)
     #include <SD.h>
     #include "SdFastClock.h"   // post-mount operating-clock raise (SD_SPI_FAST_HZ boards)
     #include <Preferences.h>
@@ -266,7 +266,7 @@ extern volatile uint8_t g_wifi_last_disc_reason;
 
 #include "esp_task_wdt.h"   // task-watchdog reconfigure — see setup() (GH #56)
 
-#if defined(HAS_TDECK_GT911) || defined(HELTEC_LORA_V4_R8) || defined(TLORA_PAGER) || defined(HAS_THINKNODE_M9)
+#if defined(HAS_TDECK_GT911) || defined(HELTEC_LORA_V4_R8) || defined(TLORA_PAGER) || defined(HAS_THINKNODE_M9) || defined(WADA_BBDECK)
 // ---- SPIFFS -> SD migration (fixes the beta_36 "lost my profile" upgrades) ----
 // Users who flipped "Store data on SD" before beta_36 ran with the toggle IGNORED
 // (the flag never survived a reboot), so their identity/prefs/contacts kept living
@@ -926,7 +926,7 @@ void setup() {
   // failure falls back to SPIFFS so the device always boots.
   bool spiffs_ok = SPIFFS.begin(false);   // try first WITHOUT auto-format
   bool sd_storage = false;
-#if defined(HAS_TDECK_GT911) || defined(HELTEC_LORA_V4_R8) || defined(TLORA_PAGER) || defined(HAS_THINKNODE_M9)
+#if defined(HAS_TDECK_GT911) || defined(HELTEC_LORA_V4_R8) || defined(TLORA_PAGER) || defined(HAS_THINKNODE_M9) || defined(WADA_BBDECK)
   {
    #if defined(TLORA_PAGER)
     extern SPIClass* tloraPagerSharedSPI();    // display/radio/SD shared bus
@@ -934,6 +934,8 @@ void setup() {
     extern SPIClass* heltecV4R8SharedSPI();   // FSPI, shared with the TFT (CS=3)
    #elif defined(HAS_THINKNODE_M9)
     extern SPIClass* m9SharedSPI();           // radio/display/SD shared bus
+   #elif defined(WADA_BBDECK)
+    extern SPIClass* bbdeckSharedSPI();       // FSPI, shared with the panel + XPT2046
    #else
     extern SPIClass* tdeckSharedSPI();        // LoRa SPI bus
    #endif
@@ -965,6 +967,8 @@ void setup() {
     SPIClass* _spi = heltecV4R8SharedSPI();
    #elif defined(HAS_THINKNODE_M9)
     SPIClass* _spi = m9SharedSPI();
+   #elif defined(WADA_BBDECK)
+    SPIClass* _spi = bbdeckSharedSPI();
    #else
     SPIClass* _spi = tdeckSharedSPI();
    #endif
