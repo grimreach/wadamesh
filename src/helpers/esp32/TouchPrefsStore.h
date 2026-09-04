@@ -289,6 +289,11 @@ bool touchPrefsReadUseSdAtBoot();
  *  2 = 180°, 3 = 270° (LV_DISP_ROT_270). Default 0. Distinct from the
  *  transient keyboard-landscape toggle ("kbrot"); changing it reboots the
  *  device so the UI rebuilds at the new orientation. */
+// Factory default for the UI rotation pref (0=portrait, 1/3=landscape).
+// Boards whose enclosure is landscape override this in platformio.ini.
+#ifndef DEFAULT_UI_ROTATION
+  #define DEFAULT_UI_ROTATION 0
+#endif
 uint8_t touchPrefsGetUiRotation();
 bool    touchPrefsSetUiRotation(uint8_t rot);
 

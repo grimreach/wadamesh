@@ -173,6 +173,8 @@ static void* wadaMp3Scratch() { return s_wada_mp3_scratch; }
     #else
       #include <RM69A10Display.h>            // RM69A10 MIPI-DSI AMOLED (default SKU) on the T-Display P4
     #endif
+  #elif defined(WADA_BBDECK)
+    #include <helpers/ui/ILI9341LCDDisplay.h>   // bare 2.8" ILI9341 module on TFT_eSPI
   #else
     #include <helpers/ui/ST7789LCDDisplay.h>
   #endif
@@ -221,6 +223,8 @@ static void* wadaMp3Scratch() { return s_wada_mp3_scratch; }
     extern LGFXDisplay display;
   #elif defined(HAS_TDISPLAY_P4)
     extern DISPLAY_CLASS display;            // RM69A10Display (AMOLED) or HI8561Display (LCD) — set in CMakeLists
+  #elif defined(WADA_BBDECK)
+    extern ILI9341LCDDisplay display;
   #else
     extern ST7789LCDDisplay display;
   #endif

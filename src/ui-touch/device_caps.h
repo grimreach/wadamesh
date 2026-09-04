@@ -131,6 +131,24 @@
   #define CAP_OTA          1
   #define CAP_LOCK_SCREEN  0
 
+#elif defined(WADA_BBDECK)            // ===== BB-Deck (Heltec V4.3 + bare 2.8" ILI9341) =====
+  // Same silicon as the Heltec V4 TFT (ESP32-S3, 2 MB QSPI PSRAM, 16 MB flash,
+  // SX1262) with a different front end: a bare 2.8" 240x320 ILI9341 SPI module
+  // driven by TFT_eSPI on FSPI/SPI2, and XPT2046 resistive touch sharing that
+  // same bus. Verified on hardware at 27 MHz; radio stays on HSPI/SPI3.
+  // XPT2046 resistive touch via src/helpers/input/Xpt2046Touch.cpp, reading
+  // through the display's TFT_eSPI instance (shared SPI bus).
+  #define CAP_TOUCH        1
+  // Orientation control IS offered: landscape is verified on this panel and no
+  // portrait boot guard applies here (that one is HELTEC_LORA_V4_R8-gated).
+  #define CAP_ROTATABLE    1
+  #define CAP_LARGE_SCREEN 0   // 240x320, same as the V4 TFT
+  #define CAP_SD           0   // the module HAS a microSD slot; not wired yet
+  #define CAP_FILESYSTEM   1   // SPIFFS + tiles LittleFS
+  #define CAP_GPS          0   // GPS dropped -- its pins are the spare GPIO budget
+  #define CAP_OTA          1   // 16 MB flash, dual A/B slots (partitions_tft_touch.csv)
+  #define CAP_LOCK_SCREEN  1   // touch present, so the unlock gesture works
+
 #else                                    // ===== Heltec V4 TFT (default) =====
   #define CAP_TOUCH        1   // capacitive touch panel
   #define CAP_ROTATABLE    1   // user can flip portrait/landscape

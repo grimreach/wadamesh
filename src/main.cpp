@@ -16,7 +16,10 @@
 #include "helpers/esp32/SdNvsPrefs.h"        // route prefs to file storage (SD/SPIFFS), off NVS
                                              // (quoted: use wadamesh's src/ copy, not the lib's stale one)
 #include "ui-touch/i18n.h"                    // translated Pager transport-state alerts
-#include "wadamesh_mark_rgb.h"               // anti-aliased mesh-mark (RGB565) for the pre-LVGL boot screen
+#include "wadamesh_mark_rgb.h"
+#if defined(WADA_BBDECK)
+  #include "helpers/input/Xpt2046Calibrate.h"
+#endif               // anti-aliased mesh-mark (RGB565) for the pre-LVGL boot screen
 #include "ui-touch/TouchSleep.h"             // idle light-sleep controller (loopEnd called at end of loop())
 #endif
 
@@ -749,6 +752,37 @@ void setup() {
                               (display.height() - WADAMESH_MARK_H) / 2,
                               WADAMESH_MARK_W, WADAMESH_MARK_H, WADAMESH_MARK_RGB565);
     display.endFrame();
+  }
+#endif
+
+#if defined(WADA_BBDECK)
+  // Touch calibration. Runs here because the panel and the UI rotation are both
+  // up, but LVGL is not -- the wizard draws through DisplayDriver directly, the
+  // same way the boot wordmark above does.
+  //
+  // Triggers on a device with no stored calibration (fresh flash, or erased NVS),
+  // or whenever the USER button is held at boot -- the escape hatch for when
+  // calibration is bad enough that Settings is unreachable by touch.
+  {
+    xptCalInit();
+    pinMode(PIN_USER_BTN, INPUT_PULLUP);
+    bool forced = false;
+    if (xptCalHaveStored()) {
+      // NOT a hold-at-reset: PIN_USER_BTN is GPIO0, the boot strapping pin, so
+      // holding it through reset puts the ROM into download mode and this code
+      // never runs. Poll for a short window AFTER boot instead, with the prompt
+      // on screen, so a bad calibration is always recoverable without a reflash.
+      xptCalPromptWindow(1800);
+      const uint32_t t0 = millis();
+      while (millis() - t0 < 1800) {
+        if (digitalRead(PIN_USER_BTN) == LOW) { forced = true; break; }
+        delay(20);
+      }
+    }
+    if (forced || !xptCalHaveStored()) {
+      Serial.printf("[CAL] wizard: %s\n", forced ? "PRG pressed" : "no stored calibration");
+      xptCalRunWizard(touchPrefsGetUiRotation());
+    }
   }
 #endif
 

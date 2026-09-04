@@ -20,6 +20,10 @@ extern "C" void set_boot_phase(int phase);
     // V4-R8 + Expansion Kit V2: TFT on hardware SPI (shared with micro-SD). Must
     // come before the HELTEC_LORA_V4_TFT branch — the R8 build defines both.
     #include "LGFXDisplay.h"
+#elif defined(WADA_BBDECK)
+    // BB-Deck: same V4 board + radio, different panel (bare 2.8" ILI9341
+    // on TFT_eSPI) and different touch (XPT2046, not the CHSC6x).
+    #include <helpers/ui/ILI9341LCDDisplay.h>
 #elif defined(HELTEC_LORA_V4_TFT)
     #include <helpers/ui/ST7789LCDDisplay.h>
 #endif
